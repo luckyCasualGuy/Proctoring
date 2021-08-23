@@ -4,12 +4,6 @@ current_events = {"head_status": ""}
 
 const videoElement = document.getElementsByClassName('input_video')[0];
 
-function start_listeners(){
-    // Start all your modules here <even the active tabs>
-    camera.start();
-    //active .start
-}
-
 function onResults(results) {
   // current_events.head_status = head_rotation(results)
 }
