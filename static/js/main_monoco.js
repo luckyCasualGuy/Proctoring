@@ -1,5 +1,6 @@
+import head_rotation from "./head_rotation.js"
 
-current_events = {}
+current_events = {"head_status": ""}
 
 const videoElement = document.getElementsByClassName('input_video')[0];
 
@@ -10,7 +11,7 @@ function start_listeners(){
 }
 
 function onResults(results) {
-
+  // current_events.head_status = head_rotation(results)
 }
 
 const faceDetection = new FaceDetection({locateFile: (file) => {
