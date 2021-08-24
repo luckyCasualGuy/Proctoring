@@ -16,10 +16,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js" crossorigin="anonymous"></script>
     
-    <script type="module" src="/static/js/main.js" crossorigin="anonymous"></script>
+    <script type="module" src="/static/js/main_monoco.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <button id = "start" type="button" onclick="start_listeners()">Start</button>
+    <button id = "start" type="button">Start</button>
     <div class="container">
         <video class="input_video"></video>
     </div>
@@ -76,12 +76,7 @@
             </div>
         </div>
     </div>
-    <script type="module">
-    function start_listeners(){
-        // Start all your modules here <even the active tabs>
-        camera.start();
-        //active .start
-    }
+    <script>
     </script>
 </body>
 </html>
