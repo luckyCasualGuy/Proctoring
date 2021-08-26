@@ -39,13 +39,13 @@ class Result{
 
     on_result(result) {
         this.head_rotation(result)
-        this.head_rotation(result)
-        this.head_rotation(result)
-        this.head_rotation(result)
-        this.head_rotation(result)
-        this.head_rotation(result)
-        this.head_rotation(result)
-        this.head_rotation(result)
+        // this.head_rotation(result)
+        // this.head_rotation(result)
+        // this.head_rotation(result)
+        // this.head_rotation(result)
+        // this.head_rotation(result)
+        // this.head_rotation(result)
+        // this.head_rotation(result)
     }
 
     //co-ordinates: left 123 right 152
