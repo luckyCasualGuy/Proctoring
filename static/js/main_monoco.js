@@ -1,21 +1,25 @@
 import head_rotation from "./head_rotation.js"
 import TabChange from "./tabchange.js";
-let start_btn = document.getElementById('start');
 
+const start_btn = document.getElementById('start');
+// const videoElement = document.getElementsByClassName('input_video')[0];
+const videoElement = parent.document.getElementsByClassName('input_video')[0];
+const debug_out = parent.document.getElementById('debug_out');
 
-function debug(out) {
-    let where = document.getElementById('debug_out');
-    let p = document.createElement('p');
-    p.innerHTML = JSON.stringify(out);
-    where.appendChild(p);
-    console.log(out)
-}
+let current_events = {"head_status": ""}
 let TC = new TabChange(debug);
 TC.set_start(start_btn);
 
-// ==========
+function debug(out) {
+    // let where = document.getElementById('debug_out');
+    // let p = document.createElement('p');
+    // p.innerHTML = JSON.stringify(out);
+    // where.appendChild(p);
+    console.log(out)
+    debug_out.innerHTML = JSON.stringify(out)
+}
 
-let current_events = {"head_status": ""}
+// ==========
 
 
 start_btn.addEventListener('click', event => {
@@ -24,7 +28,7 @@ start_btn.addEventListener('click', event => {
   //active .start
 });
 
-const videoElement = document.getElementsByClassName('input_video')[0];
+
 
 function onResults(results) {
   // current_events.head_status = head_rotation(results)
@@ -41,8 +45,8 @@ faceDetection.onResults(onResults);
 
 const camera = new Camera(videoElement, {
   onFrame: async () => {
-    await faceDetection.send({image: videoElement});
+    // await faceDetection.send({image: videoElement});
   },
-  width: 640,
-  height: 480
+  width: 200,
+  height: 200
 });
