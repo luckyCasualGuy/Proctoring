@@ -7,7 +7,7 @@ const start_element = document.getElementById('start')
 
 const EVENT_BASED_TASK = [
     [TabChange, {}],
-    [Mediapipe, {'camera': Camera ,'face_detector': FaceDetection, 'on_result': Result(out).on_result, 'video_element': video_element}]
+    [Mediapipe, {'camera': Camera ,'face_detector': FaceDetection, 'on_result': new Result(out).on_result, 'video_element': video_element}]
 ];
 
 function out(out_data) {
