@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__, static_url_path='/static',template_folder="static/templates")
 app.config['DEBUG'] = True
 
 @app.route("/", methods=['GET', 'POST'])
