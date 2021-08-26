@@ -37,15 +37,17 @@ function onResults(results) {
 const faceDetection = new FaceDetection({locateFile: (file) => {
   return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.0/${file}`;
 }});
+
 faceDetection.setOptions({
   modelSelection: 0,
   minDetectionConfidence: 0.5
 });
+
 faceDetection.onResults(onResults);
 
 const camera = new Camera(videoElement, {
   onFrame: async () => {
-    // await faceDetection.send({image: videoElement});
+    await faceDetection.send({image: videoElement});
   },
   width: 200,
   height: 200

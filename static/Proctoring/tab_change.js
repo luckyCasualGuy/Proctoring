@@ -1,8 +1,9 @@
 
 
-export default class TabChange {
-    constructor(out) {
+class TabChange {
+    constructor(out, params) {
         this.out = out
+        this.params = params
         this.total_changed = 0
         this.changed = false
         this.change_state = 'visible'
@@ -34,6 +35,7 @@ export default class TabChange {
 
                 this.out_data['time'] = time_difference['hour'].toString() + ' : ' + time_difference['minute'].toString() + ' : ' + time_difference['sec'].toString()
                 this.out_data['weight'] = this.weight_scheme(time_difference)
+
                 this.out(this.out_data)
             }
             else {
