@@ -16,10 +16,47 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js" crossorigin="anonymous"></script>
     
-    <script type="module" src="/static/js/main_monoco.js" crossorigin="anonymous"></script>
+    <!-- <script type="module" src="/static/js/main_monoco.js" crossorigin="anonymous"></script> -->
+
+    <style>
+        .out-card {
+            margin: auto;
+            width: 30rem;
+            height: 3rem;
+            background-color: #1c1c1c;
+            color: #cccccc;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .out-title {
+            display: block;
+            float: left;
+        }
+
+        .out-time {
+            float: right;
+        }
+
+        .card {
+            padding: 2rem;
+        }
+    </style>
 </head>
 <body>
-    <button id = "start" type="button">Start</button>
+
+    <div class="container">
+        <div class="row">
+            <div class="column">
+                <div class="card" id="out">
+
+                    <!-- output will go here -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <button id = "start" type="button">Start</button>
     <div class="container">
         <video class="input_video"></video>
     </div>
@@ -75,8 +112,11 @@
                 </ol>
             </div>
         </div>
-    </div>
+    </div> -->
+
+    <script src="/static/Proctoring/control.js" type="module"></script>
     <script>
+    
     </script>
 </body>
 </html>

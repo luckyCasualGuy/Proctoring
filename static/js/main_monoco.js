@@ -17,7 +17,6 @@ TC.set_start(start_btn);
 
 let current_events = {"head_status": ""}
 
-
 start_btn.addEventListener('click', event => {
   // Start all your modules here <even the active tabs>
   camera.start();
