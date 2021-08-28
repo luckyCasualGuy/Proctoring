@@ -42,17 +42,22 @@
         #start:hover{
             background-color: #6b6b6b;
         }
+
+        
     </style>
 
 </head>
 <body>
 
+    <canvas id="parent_canvas" height="480" width="640"></canvas>
+
     <div class="outer">
         <div class="middle">
           <div class="inner">
             <h1>POWERED BY AZYO</h1>
+            <h3>Sample Examination 2021</h3>
             <p>Please fill up the required details!</p>
-            <div class="row g-3 align-items-center card-body">
+            <div class="row g-3 align-items-center card-body" id="roll_here">
                 <div class="col-auto">
                     <label for="roll_no" class="form-label"><strong>Roll No:</strong> </label>
                 </div>
@@ -61,14 +66,14 @@
                 </div>
             </div>
             <div class="row align-items-center" style="padding: 2rem;">
-                <div id="start" style="margin: auto; "></div>
+                <div id="start" style="margin: auto; "><i class="bi bi-power"></i></div>
             </div>
           </div>
         </div>
     </div>
     
-    <div id="main" class="container" style="display: none;">
-        <iframe src="/static/templates/frame1.html" height="30" width="100%" title="Iframe Example"></iframe>
+    <div id="main" class="container" style="display: none; margin: 10px;">
+        <iframe src="/static/templates/frame1.html" height="40" width="100%" title="Iframe Example"></iframe>
         <iframe src="/static/templates/client_page_1.html" height="800" width="100%" title="Iframe Example"></iframe>
     </div>
 </body>
@@ -77,9 +82,23 @@
     const outer = document.getElementsByClassName('outer')[0]
     const main = document.getElementById('main')
     const start = document.getElementById('start')
+    const roll_here = document.getElementById('roll_here')
+    const roll_no_in = document.getElementById('roll_no');
+    var roll_no = 'None'
     start.addEventListener('click', ev => {
-        outer.style.display = 'none';
-        main.style.display = 'block';
+        if (roll_no === 'None') {
+            let p = document.createElement('p')
+            p.innerHTML = "Please enter roll no"
+            roll_here.appendChild(p)
+        }
+        else {
+            outer.style.display = 'none';
+            main.style.display = 'block';
+        }
+    })
+
+    roll_no_in.addEventListener('change', ev => {
+        roll_no = roll_no_in.value
     })
 
 

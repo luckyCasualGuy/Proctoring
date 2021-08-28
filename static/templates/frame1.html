@@ -12,10 +12,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.3.1620080281/face_detection.js" crossorigin="anonymous"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
     
 </head>
 <body>
-    <button id="start" type="button">Start</button>
+    <div class="row" style="padding-top: 0.5rem;">
+        <div class="col-auto">
+            <button id="start" type="button">Start</button>
+        </div>
+        <div class="col-auto">
+            <p id="roll"></p>
+        </div>
+    </div>
     <div class="container" style="position: fixed; top: 5px; right: 5px; z-index: 10;">
         <video id="input_video"></video>
         <div id = "debug_out"></div>
@@ -24,5 +34,15 @@
 <script src="/static/Proctoring/head_change.js"></script>
 <script src="/static/Proctoring/tab_change.js"></script>
 <script src="/static/Proctoring/control.js"></script>
+
+<script>
+    const roll = document.getElementById('roll')
+    
+    const roll_no_in = parent.document.getElementById('roll_no');
+    roll_no_in.addEventListener('change', ev => {
+        roll.innerHTML = roll_no_in.value;
+        console.log('here')
+    })
+</script>
 
 </html>
