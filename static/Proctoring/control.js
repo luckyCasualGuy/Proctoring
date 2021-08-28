@@ -1,13 +1,15 @@
 const start_element = document.getElementById('start')
 const video_element = document.getElementById('input_video')
 const parent_canvas = parent.document.getElementById('parent_canvas')
+// const ctx = parent_canvas.getContext('2d')
 // const on_result = new HeadChange(out, {'out_canvas': parent_canvas}).on_result
 // const HeadChangeClass = HeadChange(out, {'out_canvas': parent_canvas})
-
+console.log(parent_canvas)
+// console.log(ctx)
 
 const EVENT_BASED_TASK = [
     [TabChange, {}],
-    [Mediapipe, {'camera': Camera ,'face_detector': FaceDetection, 'on_result': HeadChange, 'video_element': video_element, "parent_canvas": parent_canvas}]
+    [Mediapipe, {'camera': Camera ,'face_detector': FaceDetection, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas}]
 ];
 
 

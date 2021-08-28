@@ -5,7 +5,14 @@ class Mediapipe {
         
         this.head_change_class = new this.params['on_result'](out,{'out_canvas': this.params["parent_canvas"]})
 
+        this.out = out
+        this.headrotationangle = 2.7
+        this.head_buffer_right = 0
+        this.head_buffer_left = 0
 
+        this.out_canvas = params['out_canvas']
+        console.log(this.out_canvas)
+        this.out_ctx = params['out_canvas'].getContext('2d')
 
         console.log('face detector loaded')
         this.faceDetection = new params['face_detector']({locateFile: (file) => {
@@ -26,10 +33,19 @@ class Mediapipe {
             height: 480
         });
         console.log('camera loaded', this.camera)
-            
+        
+        console.log("----------")
+        console.log(this.out_ctx)
+        this.func = results => {
+            this.out_ctx.save()
+            this.out_ctx.clearRect(0, 0, this.out_canvas.width, this.out_canvas.height);
+            this.out_ctx.drawImage(results.image, 0, 0, this.out_canvas.width, this.out_canvas.height);
+            this.out_ctx.restore()
+        }
+
+
         console.log('face detector on result set')
-        // this.faceDetection.onResults(params['on_result'])
-        this.faceDetection.onResults(this.head_change_class.on_result)
+        this.faceDetection.onResults(this.func)
         
     }
 
@@ -37,18 +53,27 @@ class Mediapipe {
         console.log('camera started')
         this.camera.start()
     }
+
+    on_result(results) {
+        this.print(results)
+    }
+
+    draw_on_parent(results){
+        this.out_ctx.save()
+        this.out_ctx.clearRect(0, 0, this.out_canvas.width, this.out_canvas.height);
+        this.out_ctx.drawImage(results.image, 0, 0, this.out_canvas.width, this.out_canvas.height);
+        this.out_ctx.restore()
+    }
+
+    print(vari){
+        console.log(vari)
+    }
 }
 
 
 class HeadChange{
     constructor(out, params) {
-        this.out = out
-        this.headrotationangle = 2.7
-        this.head_buffer_right = 0
-        this.head_buffer_left = 0
 
-        this.out_canvas = params['out_canvas']
-        this.out_ctx = params['out_canvas'].getContext('2D')
     }
     
     on_result(results) {
