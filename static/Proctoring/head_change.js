@@ -76,38 +76,3 @@ class Result{
         }
     }
 }
-
-// const video_element = parent.document.getElementsByClassName('input_video')[0]
-
-// console.log('face detector loaded')
-// let faceDetection = new FaceDetection({locateFile: (file) => {
-//     return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.3.1620080281/${file}`
-// }});
-
-// console.log('face detector options set', faceDetection)
-// faceDetection.setOptions({
-//     modelSelection: 0,
-//     minDetectionConfidence: 0.5
-// });
-
-// let camera = new Camera(video_element, {
-//     // const camera = new Camera(videoElement, {
-//         onFrame: async () => {
-//             // console.log('on frame async');
-//             console.log();
-//             await faceDetection.send({image: video_element});
-//         },
-//         width: 640,
-//         height: 480
-// });
-
-// console.log('camera loaded', camera)
-    
-// console.log('face detector on result set')
-// // faceDetection.onResults(params['on_result'])
-// faceDetection.onResults(result => console.log('result'))
-
-// const start_element = document.getElementById('start')
-// start_element.addEventListener('click', ev => {
-//     camera.start()
-// })
