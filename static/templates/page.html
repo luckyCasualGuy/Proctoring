@@ -70,6 +70,7 @@
                 <div class="col-auto">
                     <input class="form-control" id="roll_no" rows="3"></input>
                 </div>
+                <div id="roll_req" style="color: red;"></div>
             </div>
             <div class="row align-items-center" style="padding: 2rem;">
                 <div id="start" style="margin: auto; "><i class="bi bi-power"></i></div>
@@ -90,17 +91,18 @@
     const start = document.getElementById('start')
     const roll_here = document.getElementById('roll_here')
     const roll_no_in = document.getElementById('roll_no');
-    var roll_no = 'None'
+    var roll_no = ''
     start.addEventListener('click', ev => {
-        if (roll_no === 'None') {
-            let p = document.createElement('p')
-            p.innerHTML = "Please enter roll no"
-            roll_here.appendChild(p)
+        if (roll_no === '') {
+            document.getElementById('roll_req').innerHTML = "Roll number is required"
         }
         else {
             outer.style.display = 'none';
             main.style.display = 'block';
         }
+
+        roll_no_in.style.border = '2px solid red'
+
     })
 
     roll_no_in.addEventListener('change', ev => {
