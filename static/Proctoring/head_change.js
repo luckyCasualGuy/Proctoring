@@ -2,6 +2,10 @@ class Mediapipe {
     constructor(out, params) {
         this.out = out
         this.params = params
+        
+        this.head_change_class = new this.params['on_result'](out,{'out_canvas': this.params["parent_canvas"]})
+
+
 
         console.log('face detector loaded')
         this.faceDetection = new params['face_detector']({locateFile: (file) => {
@@ -15,20 +19,17 @@ class Mediapipe {
         });
         
         this.camera = new params['camera'](params['video_element'], {
-            // const camera = new Camera(videoElement, {
-                onFrame: async () => {
-                    // console.log('on frame async');
-                    console.log(params['video_element']);
-                    await this.faceDetection.send({image: params['video_element']});
-                },
-                width: 640,
-                height: 480
+            onFrame: async () => {
+                await this.faceDetection.send({image: params['video_element']});
+            },
+            width: 640,
+            height: 480
         });
         console.log('camera loaded', this.camera)
             
         console.log('face detector on result set')
         // this.faceDetection.onResults(params['on_result'])
-        this.faceDetection.onResults(result => console.log('result'))
+        this.faceDetection.onResults(this.head_change_class.on_result)
         
     }
 
@@ -39,22 +40,35 @@ class Mediapipe {
 }
 
 
-class Result{
-    constructor(out) {
+class HeadChange{
+    constructor(out, params) {
         this.out = out
         this.headrotationangle = 2.7
         this.head_buffer_right = 0
         this.head_buffer_left = 0
-    }
 
-    on_result(result) {
+        this.out_canvas = params['out_canvas']
+        this.out_ctx = params['out_canvas'].getContext('2D')
+    }
+    
+    on_result(results) {
         console.log('result received')
-
-
+        this.print("test")
+        // this.draw_on_parent(results)
     }
 
-    //co-ordinates: left 123 right 152
+    draw_on_parent(results){
+        this.out_ctx.save()
+        this.out_ctx.clearRect(0, 0, this.out_canvas.width, this.out_canvas.height);
+        this.out_ctx.drawImage(results.image, 0, 0, this.out_canvas.width, this.out_canvas.height);
+        this.out_ctx.restore()
+    }
+    print(vari){
+        console.log(vari)
+    }
+
     head_rotation(left_cheek, right_cheek, check){
+        //co-ordinates: left 123 right 152
         var dX = left_cheek.x - right_cheek.x;
         var dZ = left_cheek.z - right_cheek.z;
         var yaw = Math.atan2(dZ, dX);
