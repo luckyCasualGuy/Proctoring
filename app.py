@@ -5,7 +5,6 @@ from flask import request, send_file
 
 import mysql.connector
 from mysql.connector import connection
-from flask_sqlalchemy import SQLAlchemy
 
 # from handler import data_handler
 

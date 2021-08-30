@@ -47,6 +47,8 @@ class HeadChange{
         this.head_rotation_angle = 2.7
         this.head_buffer = 0
 
+        this.look_away_flag = 0
+
         this.out_canvas = params['out_canvas']
         this.canvas_ctx = this.out_canvas.getContext('2d')
     }
@@ -59,20 +61,22 @@ class HeadChange{
     }
 
     check_head_status(result){
-        let look_away_flag = 0
         // this.out({"event": "EVENT", "timestamp": "TIME"})
         if(typeof result.multiFaceLandmarks[0] !== 'undefined'){
             let landmarks = result.multiFaceLandmarks[0]
             let head_status = this.head_rotation(landmarks[123], landmarks[152])
             console.log(head_status)
+            
+            if(head_status == "LOOKING AWAY" && this.look_away_flag == 0){
+                this.look_away_flag = 1
 
-            if(head_status == "LOOKING AWAY" && look_away_flag == 0){
-                look_away_flag = 1
+                console.log("send look away")
                 this.out({"event": "LOOKING AWAY", "timestamp": new Date()})
             }
 
-            if(head_status == "NEUTRAL" && look_away_flag == 1){
-                look_away_flag = 0
+            if(head_status == "NEUTRAL" && this.look_away_flag == 1){
+                this.look_away_flag = 0
+                console.log("send neutral")
                 this.out({"event": "NEUTRAL", "timestamp": new Date()})
             }
         }
