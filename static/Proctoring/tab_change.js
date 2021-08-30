@@ -13,7 +13,7 @@ class TabChange {
         this.time_index = -1
 
         this.out_data = {
-            'title': 'TAB CHANGED',
+            'title': 'NAN',
             'time': 'NAN'
         }
     }

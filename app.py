@@ -1,7 +1,6 @@
 from flask import Flask
 from flask import render_template
 from flask_mysqldb import MySQL
-from werkzeug.datastructures import RequestCacheControl
 from flask import request, send_file
 
 import mysql.connector
@@ -33,6 +32,7 @@ def hello_world_post():
     user = 1
     session_name = "Sample MCQ Test"
     data = request.json
+    print(data)
     # data_handler(data, user, session_name)
     # log_to_db(data)
     return {'comment': 'received'}

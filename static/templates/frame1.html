@@ -31,18 +31,22 @@
         <div id = "debug_out"></div>
     </div>
 </body>
-<script src="/static/Proctoring/head_change.js"></script>
-<script src="/static/Proctoring/tab_change.js"></script>
-<script src="/static/Proctoring/control.js"></script>
+
 
 <script>
+    console.log(drawRectangle)
     const roll = document.getElementById('roll')
+    let ready = false
     
     const roll_no_in = parent.document.getElementById('roll_no');
     roll_no_in.addEventListener('change', ev => {
         roll.innerHTML = roll_no_in.value;
-        console.log('here')
+        ready = true
     })
 </script>
 
+
+<script src="/static/Proctoring/head_change.js"></script>
+<script src="/static/Proctoring/tab_change.js"></script>
+<script src="/static/Proctoring/control.js"></script>
 </html>
