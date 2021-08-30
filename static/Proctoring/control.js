@@ -10,7 +10,7 @@ const EVENT_BASED_TASK = [
 
 
 function out(out_data) {
-    ALERT.innerHTML = "WARNING " + out_data['event'] + " detected!"
+    ALERT.innerHTML = out_data['message']
 
     out_data['roll_no'] = roll_no_in.value
     out_data['session'] = "Sample Examination 2021 Day 1" //FROM CLIENT
