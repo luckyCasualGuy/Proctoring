@@ -5,6 +5,7 @@ from flask import request, send_file
 
 import mysql.connector
 from mysql.connector import connection
+from flask_sqlalchemy import SQLAlchemy
 
 # from handler import data_handler
 
@@ -12,7 +13,7 @@ app = Flask(__name__, static_url_path='/static',template_folder="static/template
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1234'
+app.config['MYSQL_PASSWORD'] = '1Password!'
 app.config['MYSQL_DB'] = 'procter'
 
 app.config['DEBUG'] = True
@@ -22,7 +23,9 @@ mysql = MySQL(app)
 
 def log_to_db(data):
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT count(code) FROM user_docs WHERE code =%s",("hello",))
+    print(f">> INSERT INTO logs (roll_no, session_name, event, timestamp) VALUES ({data['roll_no']}, '{data['session']}', '{data['event']}', '{data['timestamp']}')")
+    cursor.execute(f"INSERT INTO logs (roll_no, session_name, event, timestamp) VALUES ({data['roll_no']}, '{data['session']}', '{data['event']}', '{data['timestamp']}');")
+    mysql.connection.commit()
 
 @app.route("/", methods=['GET'])
 def hello_world_get(): return render_template("page.html")
@@ -34,7 +37,7 @@ def hello_world_post():
     data = request.json
     print(data)
     # data_handler(data, user, session_name)
-    # log_to_db(data)
+    log_to_db(data)
     return {'comment': 'received'}
     
 
