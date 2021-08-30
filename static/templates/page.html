@@ -51,13 +51,13 @@
             cursor: move;
         }
 
-        #ALERT {
+        /* #ALERT {
             color: rgba(255, 105, 105, 0.9);
             size: 40px;
             position: fixed;
             top: 15px;
             left: 10%;
-        }
+        } */
     </style>
 
 </head>
@@ -65,7 +65,16 @@
 
     <canvas id="parent_canvas" height="480" width="640"></canvas>
 
-    <h1 id="ALERT">ALERT</h1>
+    <div id="alert_container">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div id = "ALERT">
+                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+            </div>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
 
     <div class="outer">
         <div class="middle">
