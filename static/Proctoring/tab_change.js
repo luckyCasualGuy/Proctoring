@@ -13,8 +13,8 @@ class TabChange {
         this.time_index = -1
 
         this.out_data = {
-            'title': 'NAN',
-            'time': 'NAN'
+            'event': 'NAN',
+            'timestamp': 'NAN'
         }
     }
 
@@ -29,19 +29,23 @@ class TabChange {
 
             if((this.state === 'visible') && (this.changed)) {
                 this.return_time.push(timeStamp)
+                this.out_data['event'] = 'TAB CHANGE VISIBLE'
+                this.out_data['timestamp'] = timeStamp
                 
-                let time_difference = this.get_difference_in_sec(timeStamp, this.change_time[this.time_index])
-                this.time_difference.push(time_difference)
+                // let time_difference = this.get_difference_in_sec(timeStamp, this.change_time[this.time_index])
+                // this.time_difference.push(time_difference)
 
-                this.out_data['time'] = time_difference['hour'].toString() + ' : ' + time_difference['minute'].toString() + ' : ' + time_difference['sec'].toString()
-                this.out_data['weight'] = this.weight_scheme(time_difference)
-
-                this.out(this.out_data)
+                // this.out_data['time'] = time_difference['hour'].toString() + ' : ' + time_difference['minute'].toString() + ' : ' + time_difference['sec'].toString()
+                // this.out_data['weight'] = this.weight_scheme(time_difference)
             }
             else {
                 this.change_time.push(timeStamp)
+                this.out_data['event'] = 'TAB CHANGE INVISIBLE'
+                this.out_data['timestamp'] = timeStamp
                 this.time_index += 1
             }
+
+            this.out(this.out_data)
         })
     }
 

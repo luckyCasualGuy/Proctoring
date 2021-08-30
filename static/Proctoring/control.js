@@ -5,14 +5,15 @@ const ALERT = parent.document.getElementById('ALERT')
 
 const EVENT_BASED_TASK = [
     [TabChange, {}],
-    [Mediapipe, {'camera': Camera ,'face_detector': FaceDetection, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas, 'drawing_rectangle': drawRectangle}]
+    [Mediapipe, {'camera': Camera ,'face_detector': FaceDetection, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas}]
 ];
 
 
 function out(out_data) {
-    ALERT.innerHTML = "WARNING " + out_data['title'] + " detected!"
-    console.log(ALERT)
+    ALERT.innerHTML = "WARNING " + out_data['event'] + " detected!"
+
     out_data['roll_no'] = roll_no_in.value
+    out_data['session'] = "Sample Examination 2021 Day 1" //FROM CLIENT
     sendData(out_data, data => console.log('sent sucsessfully', data))
 }
 

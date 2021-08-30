@@ -76,9 +76,7 @@ class HeadChange{
         this.canvas_ctx.restore()
     }
 
-    print_(vari){
-        console.log(vari)
-    }
+    print_(vari){console.log(vari)}
 
     head_rotation(left_cheek, right_cheek, check){
         //co-ordinates: left 123 right 152
