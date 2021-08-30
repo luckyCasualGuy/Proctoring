@@ -12,7 +12,8 @@ class TabChange {
 
         this.out_data = {
             'event': 'NAN',
-            'timestamp': 'NAN'
+            'timestamp': 'NAN',
+            'message': "Do not change your tab"
         }
     }
 
