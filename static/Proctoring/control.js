@@ -5,7 +5,7 @@ const ALERT = parent.document.getElementById('ALERT')
 
 const EVENT_BASED_TASK = [
     [TabChange, {}],
-    [Mediapipe, {'camera': Camera ,'face_detector': FaceDetection, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas, 'drawing_rectangle': drawRectangle}]
+    [Mediapipe, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas}]
 ];
 
 

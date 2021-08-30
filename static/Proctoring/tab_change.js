@@ -1,5 +1,3 @@
-
-
 class TabChange {
     constructor(out, params) {
         this.out = out
