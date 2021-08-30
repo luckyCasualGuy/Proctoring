@@ -3,7 +3,6 @@ class Mediapipe {
         this.out = out
         this.params = params
 
-
         this.Result = new this.params['on_result'](this.out, {'out_canvas': parent_canvas})
         this.on_result = this.Result.get_on_result()
 
@@ -44,10 +43,12 @@ class HeadChange{
         this.params = params
 
         this.out = out
-        this.head_rotation_angle = 2.7
+        this.head_rotation_angle = 2.9
         this.head_buffer = 0
 
         this.look_away_flag = 0
+
+        this.parent_canvas_flag = 0
 
         this.out_canvas = params['out_canvas']
         this.canvas_ctx = this.out_canvas.getContext('2d')
@@ -71,13 +72,13 @@ class HeadChange{
                 this.look_away_flag = 1
 
                 console.log("send look away")
-                this.out({"event": "LOOKING AWAY", "timestamp": new Date()})
+                this.out({"event": "LOOKING AWAY", "timestamp": new Date(), 'message': "Please don't look away from the screen"})
             }
 
             if(head_status == "NEUTRAL" && this.look_away_flag == 1){
                 this.look_away_flag = 0
                 console.log("send neutral")
-                this.out({"event": "NEUTRAL", "timestamp": new Date()})
+                this.out({"event": "NEUTRAL", "timestamp": new Date(), 'message': ""})
             }
         }
     }
@@ -107,6 +108,10 @@ class HeadChange{
     }
 
     draw_FM_on_parent(results){
+        if (this.parent_canvas_flag === 0) {
+            this.parent_canvas_flag = 1
+            this.params['out_canvas'].style.display = 'block'
+        }
         this.canvas_ctx.save()
         this.canvas_ctx.drawImage(results.image, 0, 0, this.out_canvas.width, this.out_canvas.height);
         this.canvas_ctx.restore()
