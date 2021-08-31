@@ -5,6 +5,7 @@ const ALERT = parent.document.getElementById('ALERT')
 
 const EVENT_BASED_TASK = [
     [TabChange, {}],
+    [TabChangeKey, {}],
     [Mediapipe, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas}]
 ];
 
