@@ -11,7 +11,14 @@ const EVENT_BASED_TASK = [
 
 
 function out(out_data) {
+    // change text
     ALERT.innerHTML = out_data['message']
+    // visible
+    // clear interval
+    clearInterval(x)
+    let x = setTimeout(2000, () => {
+        // visivliy None
+    })
 
     out_data['roll_no'] = roll_no_in.value
     out_data['session'] = "Sample Examination 2021 Day 1" //FROM CLIENT
