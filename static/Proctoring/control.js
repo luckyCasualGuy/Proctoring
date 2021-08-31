@@ -15,8 +15,9 @@ function out(out_data) {
     ALERT.innerHTML = out_data['message']
     // visible
     // clear interval
+    let x;
     clearInterval(x)
-    let x = setTimeout(2000, () => {
+    x = setTimeout(2000, () => {
         // visivliy None
     })
 
