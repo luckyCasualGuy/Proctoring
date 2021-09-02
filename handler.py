@@ -49,6 +49,11 @@ class CalculateResult:
         'TAB CHANGE INVISIBLE': 'TAB CHANGE VISIBLE'
     }
 
+    weights = {
+        'LOOKING AWAY': 5,
+        'TAB CHANGE INVISIBLE': 5
+    }
+
     def __init__(self, sql_connect: MySQLConnect):
         self.sql_connect = sql_connect
         self.init_stacks()
@@ -83,7 +88,7 @@ class CalculateResult:
             time_delta = time_delta.astype('timedelta64[ms]').astype('int64')
 
 
-            penalties[key] = self.penalty(time_delta, cost)
+            penalties[key] = self.penalty(time_delta, self.weights[key])
 
         return penalties
 

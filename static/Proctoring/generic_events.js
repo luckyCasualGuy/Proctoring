@@ -80,7 +80,8 @@ class TabChangeKey {
             'event': 'NAN',
             'timestamp': 'NAN',
             'display_msg': true,
-            'message': "Do not change your tab"
+            'message': "Do not change your tab",
+            'beacon': false
         }
     }
 
@@ -107,7 +108,8 @@ class TabChangeKey {
                 'event': 'ALT KEYPRESS DETECTED',
                 'timestamp': new Date(),
                 'display_msg': true,
-                'message': 'Dont try changing tabs!'
+                'message': 'Dont try changing tabs!',
+                'beacon': false
             }
 
             this.out(out_data)
@@ -138,7 +140,9 @@ class PageLeave{
         this.out_data = {
             'event': 'PAGE LEAVE',
             'timestamp': 'NAN',
-            'message': '<BEACON>'
+            'display_msg': false,
+            'message': "",
+            'beacon': true
         }
     }
 
@@ -163,7 +167,9 @@ class KeyMouseTrap {
         this.out_data = {
             'event': 'PAGE LEAVE',
             'timestamp': 'NAN',
-            'message': '<BEACON>'
+            'display_msg': false,
+            'message': '<BEACON>',
+            'beacon': true
         }
     }
 
@@ -205,7 +211,7 @@ class KeyMouseTrap {
 
     handle_unload() {
         parent.window.addEventListener('unload', ev => {
-            this.out_data['event'] = "KEY TRAPS K"+ this.key_traps +" L"+ this.left_mouse_traps +" R" + this.right_mouse_traps
+            this.out_data['event'] = "KEY TRAPS |K"+ this.key_traps +"|L"+ this.left_mouse_traps +"|R" + this.right_mouse_traps
             this.out_data['timestamp'] = new Date()
             this.out(this.out_data)
         })

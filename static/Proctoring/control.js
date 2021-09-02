@@ -18,12 +18,12 @@ function out(out_data) {
     clearInterval(x)
 
     if (out_data["display_msg"]){
-        // change text
         ALERT.innerHTML = out_data['message']
-        // visible
+        
         if (alert_wrapper.style.display != "flex"){
             alert_wrapper.style.display = "flex"
         }
+
         // clear interval
         x = setTimeout(2000, () => {
             // visivliy None
@@ -37,7 +37,7 @@ function out(out_data) {
     out_data['roll_no'] = roll_no_in.value
     out_data['session'] = "Sample Examination 2021 Day 1" //FROM CLIENT
 
-    if (out_data['message'] === '<BEACON>') {
+    if (out_data['beacon']) {
         navigator.sendBeacon(parent.document.URL, JSON.stringify(out_data));
     }
     else {

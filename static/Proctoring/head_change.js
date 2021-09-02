@@ -93,20 +93,23 @@ class HeadChange{
                 this.previous_head_status = this.current_head_status
     
                 //send old_end
-                this.out(this.get_out_data(temp, "end"))
+                this.out(this.get_out_data(temp, "END"))
     
                 //send new_begin
-                this.out(this.get_out_data(this.current_head_status, "start"))
+                this.out(this.get_out_data(this.current_head_status, "START"))
             }
         }
     }
 
     get_out_data(event, state){
         return {
-            "event": event +"_"+ state, 
+            "event": event +" "+ state, 
             "timestamp": new Date(), 
             "display_msg": this.messages[event], 
-            'message': this.messages[event],}
+            'message': this.messages[event],
+            'beacon': false
+        }
+            
     }
 
     check_case_for_head_status(angles){
