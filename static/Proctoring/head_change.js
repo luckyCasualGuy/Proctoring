@@ -42,10 +42,22 @@ class HeadChange{
         this.out = out
         this.params = params
 
-        this.out = out
         this.head_rotation_angle = 2.9
         this.head_buffer = 0
 
+        this.head_down_buffer = 0
+        this.head_away_buffer = 0
+
+        this.previous_head_status
+        this.current_head_status
+
+        this.messages = {
+            "LOOKING DOWN": "Please don't look down from the screen",
+            "LOOKING AWAY": "Please don't look away from the screen",
+            "NEUTRAL": false
+        }
+
+        this.look_down_flag = 0
         this.look_away_flag = 0
 
         this.parent_canvas_flag = 0
@@ -57,33 +69,85 @@ class HeadChange{
     get_on_result() {
         return result => {
             this.draw_FM_on_parent(result)
-            this.check_head_status(result)
+            this.handle_head_status(result)
         }
     }
 
-    check_head_status(result){
+    handle_head_status(result){
         // this.out({"event": "EVENT", "timestamp": "TIME"})
         if(typeof result.multiFaceLandmarks[0] !== 'undefined'){
             let landmarks = result.multiFaceLandmarks[0]
-            let head_status = this.head_rotation(landmarks[123], landmarks[152])
-            console.log(head_status)
-            
-            if(head_status == "LOOKING AWAY" && this.look_away_flag == 0){
-                this.look_away_flag = 1
 
-                console.log("send look away")
-                this.out({"event": "LOOKING AWAY", "timestamp": new Date(), 'message': "Please don't look away from the screen"})
+            let angles = this.calculate_head_rotation_v_h(landmarks)
+
+            let raw_status = this.check_case_for_head_status(angles)
+            console.log(raw_status)
+
+            if((raw_status !== "DOWN BUFFERING") && (raw_status !== "AWAY BUFFERING")){
+                this.current_head_status = raw_status
             }
 
-            if(head_status == "NEUTRAL" && this.look_away_flag == 1){
-                this.look_away_flag = 0
-                console.log("send neutral")
-                this.out({"event": "NEUTRAL", "timestamp": new Date(), 'message': ""})
+            if(this.previous_head_status !== this.current_head_status){
+                //things have changed
+                let temp = this.previous_head_status
+                this.previous_head_status = this.current_head_status
+    
+                //send old_end
+                this.out(this.get_out_data(temp, "end"))
+    
+                //send new_begin
+                this.out(this.get_out_data(this.current_head_status, "start"))
             }
         }
     }
 
-    head_rotation(left_cheek, right_cheek){
+    get_out_data(event, state){
+        return {
+            "event": event +"_"+ state, 
+            "timestamp": new Date(), 
+            "display_msg": this.messages[event], 
+            'message': this.messages[event],}
+    }
+
+    check_case_for_head_status(angles){
+        
+        let v_ang = angles[0]
+        let h_ang = angles[1]
+
+        if (v_ang <= -15){
+            this.head_away_buffer = 0
+            if (this.head_down_buffer <= 100){
+                this.head_down_buffer++
+                return "DOWN BUFFERING"
+            }else{
+                return "LOOKING DOWN"
+            }
+        } else if (v_ang >=20 || h_ang <= -20 || h_ang >= 20){
+            this.head_down_buffer = 0
+            if (this.head_away_buffer <= 100){
+                this.head_away_buffer++
+                return "AWAY BUFFERING"
+            }else{
+                return "LOOKING AWAY"
+            }
+        } else {
+            this.head_away_buffer = 0
+            this.head_down_buffer = 0
+            return "NEUTRAL"
+        }
+    }
+
+    calculate_head_rotation_v_h(landmarks){
+        var nose_tip = [landmarks[1].x * 640, landmarks[1].y * 360, landmarks[1].z * 640]
+        var mid = [(landmarks[234].x + landmarks[454].x) * 320, (landmarks[234].y + landmarks[454].y) * 180, (landmarks[234].z + landmarks[454].z) * 320]
+        
+        var h_ang = (nose_tip[0] - mid[0])/(nose_tip[2]-mid[2]) * 60
+        var v_ang = (nose_tip[1] - mid[1])/(nose_tip[2]-mid[2]) * 60 + 15
+        
+        return [v_ang, h_ang]
+    }
+
+    calculate_head_rotation_away_or_neutral(left_cheek, right_cheek){
         //co-ordinates: left 123 right 152
         var dX = left_cheek.x - right_cheek.x;
         var dZ = left_cheek.z - right_cheek.z;
@@ -134,4 +198,31 @@ class HeadChange{
         }
         this.canvas_ctx.restore()
     }
+
+    flag_checking(){
+        if(head_status == "LOOKING DOWN" && this.look_down_flag == 0){
+            this.look_down_flag = 1
+            this.look_away_flag = 0
+
+            console.log("send look down")
+            this.out({"event": "LOOKING DOWN", "timestamp": new Date(), "display_msg": true, 'message': "Please don't look down from the screen",})
+        }
+        
+        if(head_status == "LOOKING AWAY" && this.look_away_flag == 0){
+            this.look_away_flag = 1
+            this.look_down_flag = 0
+
+            console.log("send look away")
+            this.out({"event": "LOOKING AWAY", "timestamp": new Date(), "display_msg": true, 'message': "Please don't look away from the screen",})
+        }
+
+        if(head_status == "NEUTRAL" && (this.look_away_flag == 1 || this.look_down_flag == 1)){
+            this.look_away_flag = 0
+            this.look_down_flag = 0
+
+            console.log("send neutral")
+            this.out({"event": "NEUTRAL", "timestamp": new Date(), "display_msg": false})
+        }
+    }
 }
+

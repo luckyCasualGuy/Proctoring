@@ -2,7 +2,7 @@ const start_element = parent.document.getElementById('start')
 const video_element = document.getElementById('input_video')
 const parent_canvas = parent.document.getElementById('parent_canvas')
 const ALERT = parent.document.getElementById('ALERT')
-const parent_window = parent.window
+const alert_wrapper = parent.document.getElementById('alert_wrapper')
 
 const EVENT_BASED_TASK = [
     [TabChange, {}],
@@ -14,13 +14,25 @@ const EVENT_BASED_TASK = [
 
 
 function out(out_data) {
-    ALERT.innerHTML = out_data['message']
-    
     let x;
     clearInterval(x)
-    x = setTimeout(2000, () => {
-        // visivliy None
-    })
+
+    if (out_data["display_msg"]){
+        // change text
+        ALERT.innerHTML = out_data['message']
+        // visible
+        if (alert_wrapper.style.display != "flex"){
+            alert_wrapper.style.display = "flex"
+        }
+        // clear interval
+        x = setTimeout(2000, () => {
+            // visivliy None
+            // if (alert_wrapper.style.display != "none"){
+            //     alert_wrapper.style.display = "none"
+            // }
+            alert_wrapper.style.display = "none"
+        })
+    }
 
     out_data['roll_no'] = roll_no_in.value
     out_data['session'] = "Sample Examination 2021 Day 1" //FROM CLIENT
