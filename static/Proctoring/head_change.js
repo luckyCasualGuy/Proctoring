@@ -47,6 +47,8 @@ class HeadChange{
 
         this.head_down_buffer = 0
         this.head_away_buffer = 0
+        this.missing_person = 0
+        this.missing_person_flag = "missing"
 
         this.previous_head_status
         this.current_head_status
@@ -54,7 +56,8 @@ class HeadChange{
         this.messages = {
             "LOOKING DOWN": "Please don't look down from the screen",
             "LOOKING AWAY": "Please don't look away from the screen",
-            "NEUTRAL": false
+            "NEUTRAL": false,
+            "MISSING PERSON": "Please dont miss"
         }
 
         this.look_down_flag = 0
@@ -76,6 +79,12 @@ class HeadChange{
     handle_head_status(result){
         // this.out({"event": "EVENT", "timestamp": "TIME"})
         if(typeof result.multiFaceLandmarks[0] !== 'undefined'){
+            this.missing_person = 0
+            if(this.missing_person_flag == "missing"){
+                this.missing_person_flag = "found"
+                this.out(this.get_out_data("MISSING PERSON", "end"))
+            }
+
             let landmarks = result.multiFaceLandmarks[0]
 
             let angles = this.calculate_head_rotation_v_h(landmarks)
@@ -83,7 +92,7 @@ class HeadChange{
             let raw_status = this.check_case_for_head_status(angles)
             console.log(raw_status)
 
-            if((raw_status !== "DOWN BUFFERING") && (raw_status !== "AWAY BUFFERING")){
+            if((raw_status !== "DOWN BUFFERING") && (raw_status !== "AWAY BUFFERING") && (raw_status !== "NEUTRAL")){
                 this.current_head_status = raw_status
             }
 
@@ -97,6 +106,17 @@ class HeadChange{
     
                 //send new_begin
                 this.out(this.get_out_data(this.current_head_status, "start"))
+            }
+        }else{
+            if (this.missing_person <= 100){
+                this.missing_person++
+                console.log("MISSING BUFFERING")
+            }else{
+                if(this.missing_person_flag == "found"){
+                    this.missing_person_flag = "missing"
+                    this.out(this.get_out_data("MISSING PERSON", "start"))
+                }
+                console.log("MISSING")
             }
         }
     }
