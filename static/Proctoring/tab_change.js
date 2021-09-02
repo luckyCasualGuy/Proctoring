@@ -13,6 +13,7 @@ class TabChange {
         this.out_data = {
             'event': 'NAN',
             'timestamp': 'NAN',
+            'display_msg': true,
             'message': "Do not change your tab"
         }
     }
@@ -78,6 +79,7 @@ class TabChangeKey {
         this.out_data = {
             'event': 'NAN',
             'timestamp': 'NAN',
+            'display_msg': true,
             'message': "Do not change your tab"
         }
     }
@@ -107,6 +109,7 @@ class TabChangeKey {
             let out_data = {
                 'event': 'ALT KEYPRESS DETECTED',
                 'timestamp': new Date(),
+                'display_msg': true,
                 'message': 'Dont try changing tabs!'
             }
 
@@ -119,6 +122,7 @@ class TabChangeKey {
             let out_data = {
                 'event': 'WINDOWS KEYPRESS DETECTED',
                 'timestamp': new Date(),
+                'display_msg': true,
                 'message': 'Dont try changing tabs!'
             }
 

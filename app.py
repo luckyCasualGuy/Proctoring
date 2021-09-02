@@ -12,7 +12,7 @@ app = Flask(__name__, static_url_path='/static',template_folder="static/template
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1Password!'
+app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'procter'
 
 app.config['DEBUG'] = True
