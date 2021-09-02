@@ -82,7 +82,7 @@ class HeadChange{
             this.missing_person = 0
             if(this.missing_person_flag == "missing"){
                 this.missing_person_flag = "found"
-                this.out(this.get_out_data("MISSING PERSON", "end"))
+                this.out(this.get_out_data("MISSING PERSON", "END"))
             }
 
             let landmarks = result.multiFaceLandmarks[0]
@@ -114,7 +114,7 @@ class HeadChange{
             }else{
                 if(this.missing_person_flag == "found"){
                     this.missing_person_flag = "missing"
-                    this.out(this.get_out_data("MISSING PERSON", "start"))
+                    this.out(this.get_out_data("MISSING PERSON", "START"))
                 }
                 console.log("MISSING")
             }
