@@ -1,9 +1,11 @@
+from weakref import KeyedRef
 from numpy import ndarray
 from pandas import DataFrame, read_csv
 from pathlib import Path
 from flask_mysqldb import MySQL
 from MySQLdb.cursors import Cursor
 from dateutil.parser import parse
+from pandas.core.series import Series
 
 USER_LOGS = Path('user logs')
 
@@ -45,18 +47,56 @@ class MySQLConnect:
 
 class CalculateResult:
     opposite_pairs = {
-        'LOOKING AWAY': 'NEUTRAL',
-        'TAB CHANGE INVISIBLE': 'TAB CHANGE VISIBLE'
+        'MISSING PERSON START': 'MISSING PERSON END',
+        'LOOKING AWAY START': 'LOOKING AWAY END',
+        'TAB CHANGE INVISIBLE': 'TAB CHANGE VISIBLE',
+        'LOOKING DOWN START': 'LOOKING DOWN END',
     }
 
     weights = {
-        'LOOKING AWAY': 5,
-        'TAB CHANGE INVISIBLE': 5
+        'MISSING PERSON START': 5,
+        'LOOKING AWAY START': 5,
+        'TAB CHANGE INVISIBLE': 5,
+        'LOOKING DOWN START': 5,
     }
+
+    single_events = [
+        'WINDOWS KEYPRESS DETECTED',
+        'ALT KEYPRESS DETECTED',
+        'PAGE LEAVE',
+        'KEY TRAPS'
+    ]
+
 
     def __init__(self, sql_connect: MySQLConnect):
         self.sql_connect = sql_connect
         self.init_stacks()
+        self.init_single_events()
+
+
+    def init_single_events(self):
+        self.single_event_functionality = {
+            'WINDOWS KEYPRESS DETECTED': self.default_calculate,
+            'ALT KEYPRESS DETECTED': self.default_calculate,
+            'PAGE LEAVE': self.default_calculate,
+            'KEY TRAPS': self.key_trap
+        }
+
+    def key_trap(self, df: DataFrame, cost):
+        kd = 0
+        lc = 0
+        rc = 0
+        for key_event in df['event'].values:
+            splits = key_event.split("|")
+            kd += int(splits[1][1:])
+            lc += int(splits[2][1:])
+            rc += int(splits[3][1:])
+
+        return (kd + lc + rc ) * cost
+
+
+    def default_calculate(self, df: DataFrame, cost): return len(df) * cost
+
 
     def init_stacks(self):
         self.stacks = {}
@@ -66,7 +106,7 @@ class CalculateResult:
     def penalty(self, array_in_sec, cost):
         x = array_in_sec
         len_x = len(x)
-        
+
         if not len_x: return 'NAN'
 
         total_time = sum(x)
@@ -77,7 +117,7 @@ class CalculateResult:
         '''
         penalties for that part
         '''
-        penalties = {}
+        penalties_type_1 = {}
         for key, value in self.opposite_pairs.items():
             time_values = df[df['event'].isin([key, value])]['timestamp'].values
             event_start_time, event_stop_time = time_values[::2], time_values[1::2]
@@ -88,20 +128,38 @@ class CalculateResult:
             time_delta = time_delta.astype('timedelta64[ms]').astype('int64')
 
 
-            penalties[key] = self.penalty(time_delta, self.weights[key])
+            penalties_type_1[key] = self.penalty(time_delta, self.weights[key])
 
-        return penalties
+        set_nan = False
+        penalties_type_2 = {}
+        for key, value in self.single_event_functionality.items():
+            pdf = df[df['event'] == key]
+            if pdf.empty:
+                pdf = df[df['event'].str.startswith(key)]
+                if pdf.empty: set_nan = True
+
+            val = value(pdf, 5) if not set_nan else 'NAN'
+            penalties_type_2[key] = val
+
+            set_nan = False
+
+        return penalties_type_1, penalties_type_2
+
 
     def calculate_score(self, session_name, cost):
         roll_nos = self.sql_connect.roll_list_for_session(session_name)
         student_penalties = {}
 
-        for roll_no in roll_nos:
+        for i, roll_no in enumerate(roll_nos, 1):
             df = self.sql_connect.get_data_roll_no(session_name, roll_no)
             self.pre_process_database(df)
-            penalties = self.event_wise_calculate(df.copy(), cost)
+            penalties_1, penalties_2 = self.event_wise_calculate(df.copy(), cost)
 
-            student_penalties[roll_no] = penalties
+            student_penalties[roll_no] = { 
+                'index': i,
+                'type 1': penalties_1,
+                'type 2': penalties_2
+            }
 
         return student_penalties
 

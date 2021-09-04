@@ -48,7 +48,7 @@ class HeadChange{
         this.head_down_buffer = 0
         this.head_away_buffer = 0
         this.missing_person = 0
-        this.missing_person_flag = "missing"
+        this.missing_person_flag = "found"
 
         this.previous_head_status
         this.current_head_status

@@ -1,7 +1,6 @@
 from flask import Flask, json
 from flask import render_template
-from flask_mysqldb import MySQL
-from flask import request, send_file
+from flask import request
 import json
 
 from handler import MySQLConnect, CalculateResult
@@ -38,8 +37,9 @@ def test():
     cost = 5
     session_name = 'Sample Examination 2021 Day 1'
     penalties = score_calculator.calculate_score(session_name, cost)
+    data = {'penalties': penalties}
 
-    return penalties
+    return render_template("test.html", value=data)
 
 
 if __name__ == '__main__':
