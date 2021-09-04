@@ -8,7 +8,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
-
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <style>
         #roll_list {
             border: 2px solid black;
@@ -66,12 +66,14 @@
                         </tr>
                     </thead>
                     <tbody id="roll_out_body">
-
                     </tbody>
                 </table>
             </div>
             <div class="col-8">
-                <h1>graph here</h1>
+                <div style="text-align: center;">
+                    <h1>D3.js Barchart</h1>
+                    <div id="d3-container" />
+                  </div>
             </div>
         </div>
 
@@ -86,21 +88,26 @@
 
     var data = {{ value | tojson }};
 
+
     Array.from(rolls).forEach(el => {
         el.addEventListener('click', ev => {
-            console.log(el.innerHTML)
+            // console.log(el.innerHTML)
             get_table_body(el.innerHTML)
         })
     })
 
     function get_table_body(for_no) {
         roll_out_body.innerHTML = ""
-
+        
         var type_1 = data['penalties'][for_no]['type 1']
         var type_2 = data['penalties'][for_no]['type 2']
 
+        var f_type = Object.assign({}, type_1, type_2);
+
+        get_data_graph(f_type)
+
         for (var key in type_1) {
-            console.log(key, type_1[key])
+            // console.log(key, type_1[key])
 
             var tr = document.createElement('tr')
             tr.innerHTML = `
@@ -111,7 +118,7 @@
         }
 
         for (var key in type_2) {
-            console.log(key, type_2[key])
+            // console.log(key, type_2[key])
 
             var tr = document.createElement('tr')
             tr.innerHTML = `
@@ -124,4 +131,6 @@
 
     
 </script>
+
+<script type="text/javascript" src="/static/Proctoring/grapher.js"></script>
 </html>
