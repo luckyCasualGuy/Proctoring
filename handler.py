@@ -107,7 +107,7 @@ class CalculateResult:
         x = array_in_sec
         len_x = len(x)
 
-        if not len_x: return 'NAN'
+        if not len_x: return 0
 
         total_time = sum(x)
     
@@ -138,7 +138,7 @@ class CalculateResult:
                 pdf = df[df['event'].str.startswith(key)]
                 if pdf.empty: set_nan = True
 
-            val = value(pdf, 5) if not set_nan else 'NAN'
+            val = value(pdf, 5) if not set_nan else 0
             penalties_type_2[key] = val
 
             set_nan = False
@@ -151,6 +151,7 @@ class CalculateResult:
         student_penalties = {}
 
         for i, roll_no in enumerate(roll_nos, 1):
+            print('##', roll_no)
             df = self.sql_connect.get_data_roll_no(session_name, roll_no)
             self.pre_process_database(df)
             penalties_1, penalties_2 = self.event_wise_calculate(df.copy(), cost)

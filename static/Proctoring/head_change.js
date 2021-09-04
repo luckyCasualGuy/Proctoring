@@ -101,11 +101,15 @@ class HeadChange{
                 let temp = this.previous_head_status
                 this.previous_head_status = this.current_head_status
     
-                //send old_end
-                this.out(this.get_out_data(temp, "END"))
-    
-                //send new_begin
-                this.out(this.get_out_data(this.current_head_status, "START"))
+                if (temp !== "NEUTRAL" && !temp) {
+                    //send old_end
+                    this.out(this.get_out_data(temp, "END"))
+                }
+
+                if (this.current_head_status !== "NEUTRAL") {
+                    //send new_begin
+                    this.out(this.get_out_data(this.current_head_status, "START"))
+                }
             }
         }else{
             if (this.missing_person <= 100){

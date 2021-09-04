@@ -65,19 +65,7 @@
                             <th scope="col">Penalty</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {% for event, penalty in value['penalties']['123']['type 1'].items() %}
-                        <tr>
-                            <td>{{event}}</td>
-                            <td>{{penalty}}</td>
-                        </tr>
-                        {% endfor %}
-                        {% for event, penalty in value['penalties']['123']['type 2'].items() %}
-                        <tr>
-                            <td>{{event}}</td>
-                            <td>{{penalty}}</td>
-                        </tr>
-                        {% endfor %}
+                    <tbody id="roll_out_body">
                     </tbody>
                 </table>
             </div>
@@ -96,17 +84,48 @@
 <script>
     const roll_out = document.getElementById("roll_list_out")
     const rolls = document.getElementsByClassName("roll")
+    const roll_out_body = document.getElementById("roll_out_body")
 
     var data = {{ value | tojson }};
-    // console.log(data)
+
+    Array.from(rolls).forEach(el => {
+        el.addEventListener('click', ev => {
+            console.log(el.innerHTML)
+            get_table_body(el.innerHTML)
+        })
+    })
+
+    function get_table_body(for_no) {
+        roll_out_body.innerHTML = ""
+
+        var type_1 = data['penalties'][for_no]['type 1']
+        var type_2 = data['penalties'][for_no]['type 2']
+
+        for (var key in type_1) {
+            console.log(key, type_1[key])
+
+            var tr = document.createElement('tr')
+            tr.innerHTML = `
+                <td> `+ key + `</td>
+                <td>`+ type_1[key] +`</td>
+            `
+            roll_out_body.appendChild(tr)
+        }
+
+        for (var key in type_2) {
+            console.log(key, type_2[key])
+
+            var tr = document.createElement('tr')
+            tr.innerHTML = `
+                <td> `+ key + `</td>
+                <td>`+ type_2[key] +`</td>
+            `
+            roll_out_body.appendChild(tr)
+        }
+    }
+
     
-    // Array(rolls).forEach(el => {
-    //     el.addEventListener('click', ev => {
-    //         // console.log
-    //     })
-    // })
 </script>
 
 <script type="text/javascript" src="/static/Proctoring/grapher.js"></script>
-
 </html>
