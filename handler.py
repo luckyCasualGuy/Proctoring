@@ -107,7 +107,7 @@ class CalculateResult:
         x = array_in_sec
         len_x = len(x)
 
-        if not len_x: return 'NAN'
+        if not len_x: return 0
 
         total_time = sum(x)
     
@@ -138,7 +138,7 @@ class CalculateResult:
                 pdf = df[df['event'].str.startswith(key)]
                 if pdf.empty: set_nan = True
 
-            val = value(pdf, 5) if not set_nan else 'NAN'
+            val = value(pdf, 5) if not set_nan else 0
             penalties_type_2[key] = val
 
             set_nan = False
