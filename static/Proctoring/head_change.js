@@ -92,7 +92,7 @@ class HeadChange{
             let raw_status = this.check_case_for_head_status(angles)
             console.log(raw_status)
 
-            if((raw_status !== "DOWN BUFFERING") && (raw_status !== "AWAY BUFFERING") && (raw_status !== "NEUTRAL")){
+            if((raw_status !== "DOWN BUFFERING") && (raw_status !== "AWAY BUFFERING")){
                 this.current_head_status = raw_status
             }
 

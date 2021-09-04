@@ -8,7 +8,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
-
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <style>
         #roll_list {
             border: 2px solid black;
@@ -57,7 +57,7 @@
         </div>
 
         <div class="row" id="roll_list_out">
-            <div class="col">
+            <div class="col-4">
                 <table id="roll_list" class="table">
                     <thead>
                         <tr>
@@ -66,13 +66,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for event, penalty in value['penalties']['1224']['type 1'].items() %}
+                        {% for event, penalty in value['penalties']['123']['type 1'].items() %}
                         <tr>
                             <td>{{event}}</td>
                             <td>{{penalty}}</td>
                         </tr>
                         {% endfor %}
-                        {% for event, penalty in value['penalties']['1224']['type 2'].items() %}
+                        {% for event, penalty in value['penalties']['123']['type 2'].items() %}
                         <tr>
                             <td>{{event}}</td>
                             <td>{{penalty}}</td>
@@ -80,6 +80,12 @@
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+            <div class="col-8">
+                <div style="text-align: center;">
+                    <h1>D3.js Barchart</h1>
+                    <div id="d3-container" />
+                  </div>
             </div>
         </div>
 
@@ -92,14 +98,15 @@
     const rolls = document.getElementsByClassName("roll")
 
     var data = {{ value | tojson }};
-    console.log(data)
+    // console.log(data)
     
-    Array(rolls).forEach(el => {
-        el.addEventListener('click', ev => {
-            console.log
-        })
-    })
-
-
+    // Array(rolls).forEach(el => {
+    //     el.addEventListener('click', ev => {
+    //         // console.log
+    //     })
+    // })
 </script>
+
+<script type="text/javascript" src="/static/Proctoring/grapher.js"></script>
+
 </html>
