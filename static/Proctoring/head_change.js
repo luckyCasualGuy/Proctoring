@@ -92,7 +92,7 @@ class HeadChange{
             let raw_status = this.check_case_for_head_status(angles)
             console.log(raw_status)
 
-            if((raw_status !== "DOWN BUFFERING") && (raw_status !== "AWAY BUFFERING") && (raw_status !== "NEUTRAL")){
+            if((raw_status !== "DOWN BUFFERING") && (raw_status !== "AWAY BUFFERING")){
                 this.current_head_status = raw_status
             }
 
@@ -101,11 +101,15 @@ class HeadChange{
                 let temp = this.previous_head_status
                 this.previous_head_status = this.current_head_status
     
-                //send old_end
-                this.out(this.get_out_data(temp, "END"))
-    
-                //send new_begin
-                this.out(this.get_out_data(this.current_head_status, "START"))
+                if (temp !== "NEUTRAL" && !temp) {
+                    //send old_end
+                    this.out(this.get_out_data(temp, "END"))
+                }
+
+                if (this.current_head_status !== "NEUTRAL") {
+                    //send new_begin
+                    this.out(this.get_out_data(this.current_head_status, "START"))
+                }
             }
         }else{
             if (this.missing_person <= 100){

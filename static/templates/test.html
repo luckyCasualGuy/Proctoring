@@ -57,7 +57,7 @@
         </div>
 
         <div class="row" id="roll_list_out">
-            <div class="col">
+            <div class="col-4">
                 <table id="roll_list" class="table">
                     <thead>
                         <tr>
@@ -65,7 +65,7 @@
                             <th scope="col">Penalty</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="roll_out_body">
                         {% for event, penalty in value['penalties']['1224']['type 1'].items() %}
                         <tr>
                             <td>{{event}}</td>
@@ -81,6 +81,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="col-8">
+                <h1>graph here</h1>
+            </div>
         </div>
 
     </div>
@@ -90,16 +93,46 @@
 <script>
     const roll_out = document.getElementById("roll_list_out")
     const rolls = document.getElementsByClassName("roll")
+    const roll_out_body = document.getElementById("roll_out_body")
 
     var data = {{ value | tojson }};
-    console.log(data)
-    
-    Array(rolls).forEach(el => {
+
+    Array.from(rolls).forEach(el => {
         el.addEventListener('click', ev => {
-            console.log
+            console.log(el.innerHTML)
+            get_table_body(el.innerHTML)
         })
     })
 
+    function get_table_body(for_no) {
+        roll_out_body.innerHTML = ""
 
+        var type_1 = data['penalties'][for_no]['type 1']
+        var type_2 = data['penalties'][for_no]['type 2']
+
+        for (var key in type_1) {
+            console.log(key, type_1[key])
+
+            var tr = document.createElement('tr')
+            tr.innerHTML = `
+                <td> `+ key + `</td>
+                <td>`+ type_1[key] +`</td>
+            `
+            roll_out_body.appendChild(tr)
+        }
+
+        for (var key in type_2) {
+            console.log(key, type_2[key])
+
+            var tr = document.createElement('tr')
+            tr.innerHTML = `
+                <td> `+ key + `</td>
+                <td>`+ type_2[key] +`</td>
+            `
+            roll_out_body.appendChild(tr)
+        }
+    }
+
+    
 </script>
 </html>
