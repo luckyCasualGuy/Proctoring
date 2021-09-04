@@ -88,21 +88,26 @@
 
     var data = {{ value | tojson }};
 
+
     Array.from(rolls).forEach(el => {
         el.addEventListener('click', ev => {
-            console.log(el.innerHTML)
+            // console.log(el.innerHTML)
             get_table_body(el.innerHTML)
         })
     })
 
     function get_table_body(for_no) {
         roll_out_body.innerHTML = ""
-
+        
         var type_1 = data['penalties'][for_no]['type 1']
         var type_2 = data['penalties'][for_no]['type 2']
 
+        var f_type = Object.assign({}, type_1, type_2);
+
+        get_data_graph(f_type)
+
         for (var key in type_1) {
-            console.log(key, type_1[key])
+            // console.log(key, type_1[key])
 
             var tr = document.createElement('tr')
             tr.innerHTML = `
@@ -113,7 +118,7 @@
         }
 
         for (var key in type_2) {
-            console.log(key, type_2[key])
+            // console.log(key, type_2[key])
 
             var tr = document.createElement('tr')
             tr.innerHTML = `

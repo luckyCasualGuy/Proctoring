@@ -151,7 +151,7 @@ class CalculateResult:
         student_penalties = {}
 
         for i, roll_no in enumerate(roll_nos, 1):
-            print('##', roll_no)
+            # print('##', roll_no)
             df = self.sql_connect.get_data_roll_no(session_name, roll_no)
             self.pre_process_database(df)
             penalties_1, penalties_2 = self.event_wise_calculate(df.copy(), cost)
