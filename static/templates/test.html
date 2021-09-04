@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+
+    <style>
+        #roll_list {
+            border: 2px solid black;
+        }
+
+        #roll_list_row {
+            min-height: 25rem;
+            max-height: 25rem;
+            height: 25rem;
+            background-color: #e2e1e1;
+        }
+
+        #roll_list_out {
+            min-height: 25rem;
+            max-height: 25rem;
+            height: 25rem;
+            background-color: #1c1c1c;
+        }
+
+        #roll_list_out *{
+            background-color: #e2e1e1;
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="row" id="roll_list_row">
+            <div class="col">
+                <table id="roll_list" class="table table-hover">
+                    <thead>
+                        <th scope="col">ID</th>
+                        <th scope="col">Roll No</th>
+                    </thead>
+                    <tbody>
+                        {% for val in value['penalties'].keys() %}
+                        <tr>
+                            <th scope="row">{{value['penalties'][val]['index']}}</th>
+                            <td class="roll">{{val}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row" id="roll_list_out">
+            <div class="col">
+                <table id="roll_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Event</th>
+                            <th scope="col">Penalty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event, penalty in value['penalties']['1224']['type 1'].items() %}
+                        <tr>
+                            <td>{{event}}</td>
+                            <td>{{penalty}}</td>
+                        </tr>
+                        {% endfor %}
+                        {% for event, penalty in value['penalties']['1224']['type 2'].items() %}
+                        <tr>
+                            <td>{{event}}</td>
+                            <td>{{penalty}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+<script>
+    const roll_out = document.getElementById("roll_list_out")
+    const rolls = document.getElementsByClassName("roll")
+
+    var data = {{ value | tojson }};
+    console.log(data)
+    
+    Array(rolls).forEach(el => {
+        el.addEventListener('click', ev => {
+            console.log
+        })
+    })
+
+
+</script>
+</html>
