@@ -44,6 +44,17 @@ function get_data_graph(data){
             .attr("height", d => y(0) - y(d.score))
             .attr("width", x.bandwidth());
 
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+        .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)" );
+        
+
     function yAxis(g) {
         g.attr("transform", `translate(${margin.left}, 0)`)
             .call(d3.axisLeft(y).ticks(null, gr_data.format))

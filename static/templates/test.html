@@ -32,6 +32,10 @@
             background-color: #e2e1e1;
             
         }
+
+        .roll {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -43,12 +47,14 @@
                     <thead>
                         <th scope="col">ID</th>
                         <th scope="col">Roll No</th>
+                        <th scope="col">Overall</th>
                     </thead>
                     <tbody>
                         {% for val in value['penalties'].keys() %}
                         <tr>
                             <th scope="row">{{value['penalties'][val]['index']}}</th>
                             <td class="roll">{{val}}</td>
+                            <td class="roll">No Cheat</td>
                         </tr>
                         {% endfor %}
                     </tbody>
