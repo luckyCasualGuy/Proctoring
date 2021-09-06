@@ -67,7 +67,8 @@ class CalculateResult:
         'WINDOWS KEYPRESS DETECTED',
         'ALT KEYPRESS DETECTED',
         'PAGE LEAVE',
-        'KEY TRAPS'
+        'KEY TRAPS',
+        'MOUSE TRAPS'
     ]
 
 
@@ -91,7 +92,9 @@ class CalculateResult:
             'WINDOWS KEYPRESS DETECTED': self.default_threshold(10, 5),
             'ALT KEYPRESS DETECTED':self.default_threshold(10, 5),
             'PAGE LEAVE':self.default_threshold(10, 5),
-            'KEY TRAPS':self.default_threshold(10, 5)
+            'KEY TRAPS':self.default_threshold(10, 5),
+            'LEFT MOUSE TRAPS':self.default_threshold(10, 5),
+            'RIGHT MOUSE TRAPS':self.default_threshold(10, 5)
         }
 
     def init_single_events(self):
@@ -99,7 +102,9 @@ class CalculateResult:
             'WINDOWS KEYPRESS DETECTED': self.default_calculate,
             'ALT KEYPRESS DETECTED': self.default_calculate,
             'PAGE LEAVE': self.default_calculate,
-            'KEY TRAPS': self.key_trap
+            'KEY TRAPS': self.trap,
+            'LEFT MOUSE TRAPS': self.trap,
+            'RIGHT MOUSE TRAPS': self.trap,
         }
 
     def key_trap(self, df: DataFrame, cost):
@@ -113,6 +118,14 @@ class CalculateResult:
             rc += int(splits[3][1:])
 
         return (kd + lc + rc) * cost * 250
+
+    def trap(self, df: DataFrame, cost):
+        kd = 0
+        for key_event in df['event'].values:
+            splits = key_event.split("|")
+            kd += int(splits[1][1:])
+
+        return kd  * cost * 250
 
 
     def default_calculate(self, df: DataFrame, cost): return len(df) * cost * 250
@@ -176,12 +189,11 @@ class CalculateResult:
         student_penalties = {}
 
         for i, roll_no in enumerate(roll_nos, 1):
-            # print('##', roll_no)
             df = self.sql_connect.get_data_roll_no(session_name, roll_no)
             self.pre_process_database(df)
             penalties_1, penalties_2 = self.event_wise_calculate(df.copy(), cost)
 
-            student_penalties[roll_no] = { 
+            student_penalties[roll_no] = {
                 'index': i,
                 'type 1': penalties_1,
                 'type 2': penalties_2

@@ -186,6 +186,7 @@ class PageLeave{
 }
 
 
+
 class KeyMouseTrap {
     constructor(out, params) {
         this.out = out
@@ -196,7 +197,7 @@ class KeyMouseTrap {
         this.right_mouse_traps = 0
 
         this.out_data = {
-            'event': 'PAGE LEAVE',
+            'event': 'NAN',
             'timestamp': 'NAN',
             'display_msg': false,
             'message': '<BEACON>',
@@ -229,30 +230,19 @@ class KeyMouseTrap {
             if (name === 'keydown') this.trap_key(event)
             if (name === 'contextmenu') this.right_trap_mouse(event)
         })
-
-        // Array([parent.window, parent.document.getElementById('client').contentWindow, window]).forEach(el => {
-        //     console.log(el)
-        //     el.addEventListener(name, ev => {
-        //         if (name === 'click') left_trap_mouse(ev)
-        //         if (name === 'keydown') trap_key(ev)
-        //         if (name === 'contextmenu') right_trap_mouse(ev)
-        //     })
-        // })
     }
 
     handle_unload() {
         parent.window.addEventListener('unload', ev => {
-            this.out_data['event'] = "KEY TRAPS |K"+ this.key_traps +"|L"+ this.left_mouse_traps +"|R" + this.right_mouse_traps
+            this.out_data['event'] = "ALL KEY TRAPS |K"+ this.key_traps 
             this.out_data['timestamp'] = new Date()
+            this.out(this.out_data)
+            this.out_data['event'] = "LEFT MOUSE TRAPS |L"+ this.left_mouse_traps
+            this.out(this.out_data)
+            this.out_data['event'] = "RIGHT MOUSE TRAPS |R"+ this.right_mouse_traps
             this.out(this.out_data)
         })
     }
-
-    // el.addEventListener('contextmenu', function(ev) {
-    //     ev.preventDefault();
-    //     alert('success!');
-    //     return false;
-    // }, false);
 
     left_trap_mouse(event) {this.left_mouse_traps ++}
     right_trap_mouse(event) {this.right_mouse_traps ++}
