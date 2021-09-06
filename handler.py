@@ -68,7 +68,8 @@ class CalculateResult:
         'ALT KEYPRESS DETECTED',
         'PAGE LEAVE',
         'KEY TRAPS',
-        'MOUSE TRAPS'
+        'LEFT MOUSE TRAPS',
+        'RIGHT MOUSE TRAPS'
     ]
 
 
@@ -163,7 +164,6 @@ class CalculateResult:
 
             time_delta: ndarray = event_stop_time - event_start_time
             time_delta = time_delta.astype('timedelta64[ms]').astype('int64')
-
 
             penalties_type_1[key] = self.thresh(self.penalty(time_delta, self.weights[key]), self.threshold[key])
 
