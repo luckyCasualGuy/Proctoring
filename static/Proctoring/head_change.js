@@ -67,6 +67,26 @@ class HeadChange{
 
         this.out_canvas = params['out_canvas']
         this.canvas_ctx = this.out_canvas.getContext('2d')
+
+        parent.window.addEventListener('unload', ev => {
+            if (this.current_head_status !== "NEUTRAL" && this.current_head_status !== 'undefined') {
+                let out_data = {
+                    "event": this.current_head_status + " END", 
+                    "timestamp": new Date(), 
+                    "display_msg": false, 
+                    'message': "",
+                    'beacon': true
+                }
+
+                this.out(out_data)
+        }
+
+
+            this.out_data['event'] = ''
+            this.out_data['beacon'] = true
+            this.out(this.out_data)
+            this.out_data['beacon'] = false
+        })
     }
     
     get_on_result() {
@@ -101,7 +121,7 @@ class HeadChange{
                 let temp = this.previous_head_status
                 this.previous_head_status = this.current_head_status
     
-                if (temp !== "NEUTRAL" && !temp) {
+                if (temp !== "NEUTRAL" && temp !== 'undefined') {
                     //send old_end
                     this.out(this.get_out_data(temp, "END"))
                 }

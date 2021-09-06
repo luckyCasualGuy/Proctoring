@@ -1,3 +1,4 @@
+from datetime import time
 from weakref import KeyedRef
 from numpy import ndarray
 from pandas import DataFrame, read_csv
@@ -51,13 +52,15 @@ class CalculateResult:
         'LOOKING AWAY START': 'LOOKING AWAY END',
         'TAB CHANGE INVISIBLE': 'TAB CHANGE VISIBLE',
         'LOOKING DOWN START': 'LOOKING DOWN END',
+        'CLIENT PAGE FOCUS LOST': 'CLIENT PAGE FOCUS GAINED'
     }
-
+        
     weights = {
         'MISSING PERSON START': 5,
         'LOOKING AWAY START': 5,
         'TAB CHANGE INVISIBLE': 5,
         'LOOKING DOWN START': 5,
+        'CLIENT PAGE FOCUS LOST': 5,
     }
 
     single_events = [
@@ -72,7 +75,24 @@ class CalculateResult:
         self.sql_connect = sql_connect
         self.init_stacks()
         self.init_single_events()
+        self.init_tresh()
 
+
+    def thresh(self, value: int, threshold: int): return 100 if (value / threshold) > 1 else (value / threshold) * 100
+
+
+    def init_tresh(self):
+        self.threshold = {
+            'MISSING PERSON START': self.penalty_calculate(10, 6*(10**3), 5),
+            'LOOKING AWAY START': self.penalty_calculate(10, 6*(10**3), 5),
+            'TAB CHANGE INVISIBLE': self.penalty_calculate(10, 6*(10**3), 5),
+            'LOOKING DOWN START': self.penalty_calculate(10, 6*(10**3), 5),
+            'CLIENT PAGE FOCUS LOST': self.penalty_calculate(10, 6*(10**3), 5),
+            'WINDOWS KEYPRESS DETECTED': self.default_threshold(10, 5),
+            'ALT KEYPRESS DETECTED':self.default_threshold(10, 5),
+            'PAGE LEAVE':self.default_threshold(10, 5),
+            'KEY TRAPS':self.default_threshold(10, 5)
+        }
 
     def init_single_events(self):
         self.single_event_functionality = {
@@ -92,26 +112,30 @@ class CalculateResult:
             lc += int(splits[2][1:])
             rc += int(splits[3][1:])
 
-        return (kd + lc + rc ) * cost
+        return (kd + lc + rc) * cost * 250
 
 
-    def default_calculate(self, df: DataFrame, cost): return len(df) * cost
-
+    def default_calculate(self, df: DataFrame, cost): return len(df) * cost * 250
+    def default_threshold(self, length, cost): return length * cost * 250
 
     def init_stacks(self):
         self.stacks = {}
         for key in self.opposite_pairs.keys():
             self.stacks[key] = []
 
+
+    def penalty_calculate(self, times, total, cost):
+        return cost * (times + (total * 0.01) + ((times / total) * 0.01))
+
     def penalty(self, array_in_sec, cost):
         x = array_in_sec
         len_x = len(x)
 
         if not len_x: return 0
-
         total_time = sum(x)
     
-        return cost * (len_x + (total_time * 0.01) + ((len_x / total_time) * 0.01))
+        return self.penalty_calculate(len_x, total_time, cost)
+
 
     def event_wise_calculate(self, df: DataFrame, cost: int) -> dict:
         '''
@@ -126,9 +150,10 @@ class CalculateResult:
 
             time_delta: ndarray = event_stop_time - event_start_time
             time_delta = time_delta.astype('timedelta64[ms]').astype('int64')
+            print(time_delta)
 
 
-            penalties_type_1[key] = self.penalty(time_delta, self.weights[key])
+            penalties_type_1[key] = self.thresh(self.penalty(time_delta, self.weights[key]), self.threshold[key])
 
         set_nan = False
         penalties_type_2 = {}
@@ -139,7 +164,7 @@ class CalculateResult:
                 if pdf.empty: set_nan = True
 
             val = value(pdf, 5) if not set_nan else 0
-            penalties_type_2[key] = val
+            penalties_type_2[key] = self.thresh(val, self.threshold[key])
 
             set_nan = False
 

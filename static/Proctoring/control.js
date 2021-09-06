@@ -6,6 +6,7 @@ const alert_wrapper = parent.document.getElementById('alert_wrapper')
 
 const EVENT_BASED_TASK = [
     [TabChange, {}],
+    [FocusChange, {}],
     [TabChangeKey, {}],
     [PageLeave, {}],
     [KeyMouseTrap, {}],

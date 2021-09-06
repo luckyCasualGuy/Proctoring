@@ -29,7 +29,7 @@ class TabChange {
             if((this.state === 'visible') && (this.changed)) {
                 this.return_time.push(timeStamp)
                 this.out_data['event'] = 'TAB CHANGE VISIBLE'
-                this.out_data['timestamp'] = timeStamp    
+                this.out_data['timestamp'] = timeStamp
             }
             else {
                 this.change_time.push(timeStamp)
@@ -42,32 +42,63 @@ class TabChange {
         })
     }
 
+}
 
-    get_difference_in_sec(end, start) {
 
-        var hrs = end.getHours() - start.getHours();
-        var min = end.getMinutes() - start.getMinutes(); 
-        var sec = end.getSeconds() - start.getSeconds();  
-        
-        var hour_carry = 0;
-        var minutes_carry = 0;
-        if(min < 0){
-            min += 60;
-            hour_carry += 1;
+class FocusChange {
+    constructor(out, params) {
+        this.out = out
+        this.params = params
+
+        this.out_data = {
+            'event': 'NAN',
+            'timestamp': 'NAN',
+            'display_msg': true,
+            'message': "Do not change your focus",
+            'beacon': false
         }
-        hrs = hrs - hour_carry;
-        if(sec < 0){
-            sec += 60;
-            minutes_carry += 1;
-        }
-        
-        min = min - minutes_carry;
 
-        return {'hour': hrs, 'minute': min, 'sec': sec}
+        this.focus_changed = false
+        this.window_lost = false
+        this.client_lost = false
     }
 
+    start_checking() {
+        // client
+        parent.document.getElementById('client').contentWindow.addEventListener('blur', ev => {
+            this.client_lost = true
 
-    print(message) {console.log(message)}
+            this.focus_changed = true
+            this.out_data['timestamp'] = new Date()
+            this.out_data['event'] = 'CLIENT PAGE FOCUS LOST'
+            this.out(this.out_data)
+        })
+
+        parent.document.getElementById('client').contentWindow.addEventListener('focus', ev => {
+            // if (this.window_lost) { 
+            //     this.out_data['timestamp'] = new Date()
+            //     this.out_data['event'] = '*WINDOW PAGE FOCUS GAINED'
+
+            //     this.window_lost = false
+            //     console.log(this.out_data)
+            // }
+            if (this.focus_changed) {
+                this.client_lost = false
+                this.out_data['event'] = 'CLIENT PAGE FOCUS GAINED'
+                this.out(this.out_data)
+            }
+        })
+
+        parent.window.addEventListener('unload', ev => {
+            if (this.client_lost) {
+                this.out_data['event'] = 'CLIENT PAGE FOCUS GAINED'
+                this.out_data['beacon'] = true
+                this.out(this.out_data)
+                this.out_data['beacon'] = false
+            }
+        })
+
+    }
 }
 
 
@@ -231,3 +262,4 @@ class KeyMouseTrap {
         event.preventDefault()
     }
 }
+
