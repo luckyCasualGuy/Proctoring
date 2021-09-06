@@ -163,7 +163,6 @@ class CalculateResult:
 
             time_delta: ndarray = event_stop_time - event_start_time
             time_delta = time_delta.astype('timedelta64[ms]').astype('int64')
-            print(time_delta)
 
 
             penalties_type_1[key] = self.thresh(self.penalty(time_delta, self.weights[key]), self.threshold[key])
@@ -183,6 +182,27 @@ class CalculateResult:
 
         return penalties_type_1, penalties_type_2
 
+    def calculate_overall(self, penalties_1, penalties_2):
+        # wt needs to add upto 100
+        # item -> [value, wt]
+        condition_wt_format = {
+            #average -> 100
+            "average": [self.calc_average(penalties_1, penalties_2), 100],
+        }
+
+        return self.calc_score(condition_wt_format)
+    
+    def calc_score(self, format):
+        score = 0
+        for item in format.values():
+            score += item[0] * (item[1]/100)
+        return score
+
+    def calc_average(self, penalties_1, penalties_2):
+        tot = 0
+        for i in [penalties_1, penalties_2]:
+            tot += sum(i.values())
+        return tot/(len(penalties_1) + len(penalties_2))
 
     def calculate_score(self, session_name, cost):
         roll_nos = self.sql_connect.roll_list_for_session(session_name)
@@ -192,11 +212,12 @@ class CalculateResult:
             df = self.sql_connect.get_data_roll_no(session_name, roll_no)
             self.pre_process_database(df)
             penalties_1, penalties_2 = self.event_wise_calculate(df.copy(), cost)
-
+            overall = self.calculate_overall(penalties_1, penalties_2)
             student_penalties[roll_no] = {
                 'index': i,
                 'type 1': penalties_1,
-                'type 2': penalties_2
+                'type 2': penalties_2,
+                'overall': overall,
             }
 
         return student_penalties

@@ -43,18 +43,26 @@
                     <thead>
                         <th scope="col">ID</th>
                         <th scope="col">Roll No</th>
+                        <th scope="col">Overall</th>
                     </thead>
                     <tbody>
                         {% for val in value['penalties'].keys() %}
                         <tr>
                             <th scope="row">{{value['penalties'][val]['index']}}</th>
                             <td class="roll">{{val}}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{value['penalties'][val]['overall']}}%" aria-valuenow="{{50}}" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </td>`
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
+        </table>
 
         <div class="row" id="roll_list_out">
             <div class="col-4">
@@ -87,6 +95,7 @@
     const roll_out_body = document.getElementById("roll_out_body")
 
     var data = {{ value | tojson }};
+    // console.log(data)
 
 
     Array.from(rolls).forEach(el => {
