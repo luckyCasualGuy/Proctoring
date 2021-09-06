@@ -27,14 +27,15 @@ function get_data_graph(data){
         .padding(0.1)
 
     const y = d3.scaleLinear()
-        .domain([0, 300])
+        .domain([0, 100])
         .range([height - margin.bottom, margin.top])
 
     svg
         .append("g")
         .attr("fill", 'royalblue')
         .selectAll("rect")
-        .data(gr_data.sort((a, b) => d3.descending(a.score, b.score)))
+        // .data(gr_data.sort((a, b) => d3.descending(a.score, b.score)))
+        .data(gr_data)
         .join("rect")
             .attr("x", (d, i) => x(i))
             .attr("y", d => y(d.score))
