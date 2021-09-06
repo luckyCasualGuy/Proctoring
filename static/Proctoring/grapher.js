@@ -1,4 +1,3 @@
-
 function get_data_graph(data){
     document.getElementById("d3-container").innerHTML = ""
     var gr_data = []
