@@ -1,12 +1,13 @@
-from datetime import time
+from datetime import time, datetime
 from weakref import KeyedRef
-from numpy import ndarray
+from numpy import ndarray, mean, array, append, mean, isnan
 from pandas import DataFrame, read_csv
 from pathlib import Path
 from flask_mysqldb import MySQL
 from MySQLdb.cursors import Cursor
 from dateutil.parser import parse
 from pandas.core.series import Series
+
 
 USER_LOGS = Path('user logs')
 
@@ -102,7 +103,7 @@ class CalculateResult:
         self.single_event_functionality = {
             'WINDOWS KEYPRESS DETECTED': self.default_calculate,
             'ALT KEYPRESS DETECTED': self.default_calculate,
-            'PAGE LEAVE': self.default_calculate,
+            'PAGE LEAVE': self.page_leave,
             'KEY TRAPS': self.trap,
             'LEFT MOUSE TRAPS': self.trap,
             'RIGHT MOUSE TRAPS': self.trap,
@@ -130,6 +131,7 @@ class CalculateResult:
 
 
     def default_calculate(self, df: DataFrame, cost): return len(df) * cost * 250
+    def page_leave(self, df: DataFrame, cost): return (len(df) - 1) * cost * 250
     def default_threshold(self, length, cost): return length * cost * 250
 
     def init_stacks(self):
@@ -225,3 +227,170 @@ class CalculateResult:
 
     def pre_process_database(self, db: DataFrame):
         db['timestamp'] = db['timestamp'].map(lambda x: parse(x))
+
+
+class CheatCombination: pass 
+
+class DataPreprocess:
+    __RESULT = {
+        'OOP': 'Not Set',
+        'roll list': 'Not Set',
+        'event summary': {}
+    }
+
+    __OPP = {
+        "missing for": {
+            'type': 'interval',
+            'required': [('MISSING PERSON START', 'MISSING PERSON END')],
+            'results': {},
+        },
+        "looking away": {
+            'type': 'interval',
+            'required': [('LOOKING AWAY START', 'LOOKING AWAY END')],
+            'results': {},
+        },
+        "tab changed": {
+            'type': 'interval',
+            'required': [('TAB CHANGE INVISIBLE', 'TAB CHANGE VISIBLE')],
+            'results': {},
+        },
+        "looking down": {
+            'type': 'interval',
+            'required': [('LOOKING DOWN START', 'LOOKING DOWN END')],
+            'results': {},
+        },
+        "client lost focus": {
+            'type': 'interval',
+            'required': [('CLIENT PAGE FOCUS LOST', 'CLIENT PAGE FOCUS GAINED')],
+            'results': {},
+        },
+
+        "Alt key press": {
+            'type': 'keypress',
+            'required': [('ALT KEYPRESS DETECTED',)],
+            'results': {},
+        },
+        "Windows key press": {
+            'type': 'keypress',
+            'required': [('WINDOWS KEYPRESS DETECTED',)],
+            'results': {},
+        },
+        "Key press": {
+            'type': 'keysummary',
+            'required': [('ALL KEY TRAPS',)],
+            'results': {},
+        },
+        "Left click": {
+            'type': 'keypress',
+            'required': [('LOOKING DOWN START',)],
+            'results': {},
+        },
+        "Right click": {
+            'type': 'keypress',
+            'required': [('LOOKING DOWN START',)],
+            'results': {},
+        },
+    }
+
+
+    def __init__(self, DB: MySQLConnect) -> None:
+        self.DB = DB
+
+    def __main_loop(self, session_name) -> None:
+        roll_list = self.DB.roll_list_for_session(session_name)
+        self.__RESULT['roll list'] = [str(n) for n in roll_list]
+
+        
+        for i, roll_no in enumerate(roll_list, 1):
+        
+            df = self.DB.get_data_roll_no(session_name, roll_no)
+            df['timestamp'] = df['timestamp'].map(lambda x: parse(x))
+
+            for condition, params in self.__OPP.items():
+                results = {}
+                required = params['required']
+                type_ = params['type']
+
+                if type_ == 'interval':
+                    pairs = required[0]
+                    
+                    time_values = df[df['event'].isin(pairs)]['timestamp'].values
+                    event_start_time, event_stop_time = time_values[::2], time_values[1::2]
+
+                    time_delta: ndarray = event_stop_time - event_start_time
+                    time_delta = time_delta.astype('timedelta64[ms]').astype('int64')
+
+                    checker = time_delta
+
+                    # result generation
+                    results['start time'] = [str(n) for n in event_start_time]
+                    results['happened for'] = [int(n) for n in time_delta]
+                    results['total time'] = int(sum(time_delta))
+                    results['total time happened'] = int(len(time_delta))
+                    results['happened'] = True if results['start time'] else False
+
+                elif type_ == 'keypress':
+                    time_values = df[df['event'].isin(required[0])]['timestamp'].values
+
+                    results['start time'] = [str(n) for n in time_values]
+                    results['happened for'] = []
+                    results['total time'] = 0
+                    results['total time happened'] = int(len(time_values))
+                    results['happened'] = True if results['start time'] else False
+
+                    checker = time_values
+
+                elif type_ == 'keysummary':
+                    event_values = df[df['event'].str.startswith(required[0][0])]['event'].values
+                    time_values = df[df['event'].str.startswith(required[0][0])]['timestamp'].values
+                    
+                    total_key_press = 0
+                    for key_event in event_values:
+                        splits = key_event.split("|")
+                        total_key_press += int(splits[1][1:])
+
+                    results['start time'] = [str(n) for n in time_values]
+                    results['happened for'] = []
+                    results['total time'] = 0
+                    results['total time happened'] = total_key_press
+                    results['happened'] = True if total_key_press else False
+                    
+                    checker = time_values
+
+
+                else: continue
+
+
+                #overall calculations
+                if condition not in self.__RESULT['event summary']: self.__RESULT['event summary'][condition] = {}
+
+                if 'avg' not in self.__RESULT['event summary'][condition]: self.__RESULT['event summary'][condition]['avg'] = array([])
+                self.__RESULT['event summary'][condition]['avg'] = append(self.__RESULT['event summary'][condition]['avg'], len(checker))
+
+                if 'total' not in self.__RESULT['event summary'][condition]: self.__RESULT['event summary'][condition]['total'] = array([])
+                self.__RESULT['event summary'][condition]['total'] = append(self.__RESULT['event summary'][condition]['total'], len(checker))
+
+                if 'total_time' not in self.__RESULT['event summary'][condition]: self.__RESULT['event summary'][condition]['total_time'] = array([])
+                self.__RESULT['event summary'][condition]['total_time'] = append(self.__RESULT['event summary'][condition]['total_time'], sum(checker) if (checker.dtype == 'float64') or (checker.dtype == 'int64') or (checker.dtype == 'int32') else 0)
+
+
+                # SCORE
+                self.__OPP[condition]['results'][roll_no] = results
+            
+
+        for event, summary in self.__RESULT['event summary'].items():
+            for operation, value in summary.items():
+                if operation == 'avg': self.__RESULT['event summary'][event]['avg'] = 0 if isnan(mean(value)) else float(mean(value))
+
+                if operation == 'total': self.__RESULT['event summary'][event]['total'] = 0 if isnan(sum(value)) else int(sum(value))
+
+                if operation == 'total_time': self.__RESULT['event summary'][event]['total_time'] = 0 if isnan(sum(value)) else int(sum(value))
+
+
+    def generate_results(self, session_name):
+        self.__main_loop(session_name)
+        self.__RESULT['OOP'] = self.__OPP
+        return self.__RESULT    
+
+    
+    def get_results(self): return self.__OPP

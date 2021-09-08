@@ -39,6 +39,7 @@
     </style>
 </head>
 <body>
+    {{value['result 2']}}
     <div class="container">
 
         <div class="row" id="roll_list_row">
@@ -99,7 +100,8 @@
     const roll_out_body = document.getElementById("roll_out_body")
 
     var data = {{ value | tojson }};
-    // console.log(data)
+    // car data1 = {{value['result 2'] | tojson}}
+    console.log(data['result 2'])
 
 
     Array.from(rolls).forEach(el => {

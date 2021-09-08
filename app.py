@@ -3,7 +3,7 @@ from flask import render_template
 from flask import request
 import json
 
-from handler import MySQLConnect, CalculateResult
+from handler import MySQLConnect, CalculateResult, DataPreprocess
 
 
 app = Flask(__name__, static_url_path='/static',template_folder="static/templates")
@@ -18,6 +18,7 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 sql = MySQLConnect(app)
 score_calculator = CalculateResult(sql)
+calc = DataPreprocess(sql)
 
 @app.route("/", methods=['GET'])
 def hello_world_get(): return render_template("page.html")
@@ -38,7 +39,11 @@ def test():
     cost = 5
     session_name = 'Sample Examination 2021 Day 1'
     penalties = score_calculator.calculate_score(session_name, cost)
-    data = {'penalties': penalties}
+
+    r1 = calc.generate_results(session_name)
+    
+    
+    data = {'penalties': penalties, 'result 2': r1}
 
     return render_template("test.html", value=data)
 
