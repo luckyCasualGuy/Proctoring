@@ -8,7 +8,8 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js" crossorigin="anonymous"></script>
     <style>
         #roll_list {
             border: 2px solid black;
@@ -18,25 +19,24 @@
             min-height: 25rem;
             max-height: 25rem;
             height: 25rem;
-            background-color: #e2e1e1;
+            background-color: rgb(238, 247, 247);
         }
 
         #roll_list_out {
             min-height: 25rem;
             max-height: 25rem;
             height: 25rem;
-            background-color: #1c1c1c;
+            background-color: black;
         }
 
         #roll_list_out *{
-            background-color: #e2e1e1;
+            background-color: rgb(238, 247, 247);
             
         }
     </style>
 </head>
 <body>
     <div class="container">
-
         <div class="row" id="roll_list_row">
             <div class="col">
                 <table id="roll_list" class="table table-hover">
@@ -52,10 +52,10 @@
                             <td class="roll">{{val}}</td>
                             <td>
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{value['penalties'][val]['overall']}}%" aria-valuenow="{{50}}" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{value['penalties'][val]['overall']}}%" aria-valuenow="{{value['penalties'][val]['overall']}}" aria-valuemin="0" aria-valuemax="100">
                                     </div>
                                 </div>
-                            </td>`
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -65,7 +65,7 @@
         </table>
 
         <div class="row" id="roll_list_out">
-            <div class="col-4">
+            <div class="col-6">
                 <table id="roll_list" class="table">
                     <thead>
                         <tr>
@@ -77,10 +77,11 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-8">
+            <div class="col-6">
                 <div style="text-align: center;">
                     <h3>Penalties</h3>
-                    <div id="d3-container" />
+                    <!-- <div id="d3-container" /> -->
+                    <canvas id="myChart" width="400" height="400"></canvas>
                   </div>
             </div>
         </div>
@@ -89,6 +90,8 @@
 
 </body>
 
+
+
 <script>
     const roll_out = document.getElementById("roll_list_out")
     const rolls = document.getElementsByClassName("roll")
@@ -96,7 +99,8 @@
 
     var data = {{ value | tojson }};
     // console.log(data)
-
+    // let overall_list = data['penalties']
+    // get_data_graph(overall_list)
 
     Array.from(rolls).forEach(el => {
         el.addEventListener('click', ev => {
@@ -110,10 +114,12 @@
         
         var type_1 = data['penalties'][for_no]['type 1']
         var type_2 = data['penalties'][for_no]['type 2']
+        // var overall_list = data['penalties']
 
         var f_type = Object.assign({}, type_1, type_2);
 
-        get_data_graph(f_type)
+        // get_data_graph(overall_list)
+        change_graph(f_type)
 
         for (var key in type_1) {
             // console.log(key, type_1[key])
