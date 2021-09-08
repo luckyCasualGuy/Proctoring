@@ -5,13 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
-    <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js" crossorigin="anonymous"></script>
     <style>
-        #roll_list {
+        /* #roll_list {
             border: 2px solid black;
         }
 
@@ -32,7 +31,7 @@
         #roll_list_out *{
             background-color: rgb(238, 247, 247);
             
-        }
+        } */
 
         .roll {
             cursor: pointer;
@@ -81,6 +80,14 @@
                     <tbody id="roll_out_body">
                     </tbody>
                 </table>
+                <div id = "macro_conditions" style="display: none;">
+                    <a tabindex="0" class="btn btn-l btn-danger" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Dismissible popover" data-bs-content="And here's some amazing content. It's very engaging. Right?">Copying</a>
+                    <a tabindex="0" class="btn btn-l btn-info" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Dismissible popover" data-bs-content="And here's some amazing content. It's very engaging. Right?">Googling</a>
+                    <a tabindex="0" class="btn btn-l btn-info" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Dismissible popover" data-bs-content="And here's some amazing content. It's very engaging. Right?">Talking</a>
+                    <a tabindex="0" class="btn btn-l btn-danger" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Dismissible popover" data-bs-content="And here's some amazing content. It's very engaging. Right?">Reading from notes</a>
+                    <a tabindex="0" class="btn btn-l btn-info" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Dismissible popover" data-bs-content="And here's some amazing content. It's very engaging. Right?" style="margin: 5px;">Moving from seat</a>
+                </div>
+
             </div>
             <div class="col-6">
                 <div style="text-align: center;">
@@ -95,12 +102,20 @@
 
 </body>
 
+<script>
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+    
+</script>
 
 
 <script>
     const roll_out = document.getElementById("roll_list_out")
     const rolls = document.getElementsByClassName("roll")
     const roll_out_body = document.getElementById("roll_out_body")
+    const macro_block = document.getElementById("macro_conditions")
 
     var data = {{ value | tojson }};
     // car data1 = {{value['result 2'] | tojson}}
@@ -125,6 +140,8 @@
 
         // get_data_graph(overall_list)
         change_graph(f_type)
+
+        macro_block.style.display = "block"
 
         for (var key in type_1) {
             // console.log(key, type_1[key])
