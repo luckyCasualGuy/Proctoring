@@ -241,53 +241,53 @@ class DataPreprocess:
     __OPP = {
         "missing for": {
             'type': 'interval',
-            'required': [('MISSING PERSON START', 'MISSING PERSON END')],
+            'required': [('MISSING PERSON START', 'MISSING PERSON END'), (10, 6*(10**3), 5)],
             'results': {},
         },
         "looking away": {
             'type': 'interval',
-            'required': [('LOOKING AWAY START', 'LOOKING AWAY END')],
+            'required': [('LOOKING AWAY START', 'LOOKING AWAY END'), (10, 6*(10**3), 5)],
             'results': {},
         },
         "tab changed": {
             'type': 'interval',
-            'required': [('TAB CHANGE INVISIBLE', 'TAB CHANGE VISIBLE')],
+            'required': [('TAB CHANGE INVISIBLE', 'TAB CHANGE VISIBLE'), (10, 6*(10**3), 5)],
             'results': {},
         },
         "looking down": {
             'type': 'interval',
-            'required': [('LOOKING DOWN START', 'LOOKING DOWN END')],
+            'required': [('LOOKING DOWN START', 'LOOKING DOWN END'), (10, 6*(10**3), 5)],
             'results': {},
         },
         "client lost focus": {
             'type': 'interval',
-            'required': [('CLIENT PAGE FOCUS LOST', 'CLIENT PAGE FOCUS GAINED')],
+            'required': [('CLIENT PAGE FOCUS LOST', 'CLIENT PAGE FOCUS GAINED'), (10, 6*(10**3), 5)],
             'results': {},
         },
 
         "Alt key press": {
             'type': 'keypress',
-            'required': [('ALT KEYPRESS DETECTED',)],
+            'required': [('ALT KEYPRESS DETECTED',), (10, 1, 5)],
             'results': {},
         },
         "Windows key press": {
             'type': 'keypress',
-            'required': [('WINDOWS KEYPRESS DETECTED',)],
+            'required': [('WINDOWS KEYPRESS DETECTED',),  (10, 1, 5)],
             'results': {},
         },
         "Key press": {
             'type': 'keysummary',
-            'required': [('ALL KEY TRAPS',)],
+            'required': [('ALL KEY TRAPS',), (10, 1, 5)],
             'results': {},
         },
         "Left click": {
             'type': 'keypress',
-            'required': [('LOOKING DOWN START',)],
+            'required': [('LOOKING DOWN START',), (10, 1, 5)],
             'results': {},
         },
         "Right click": {
             'type': 'keypress',
-            'required': [('LOOKING DOWN START',)],
+            'required': [('LOOKING DOWN START',), (10, 1, 5)],
             'results': {},
         },
     }
@@ -295,11 +295,16 @@ class DataPreprocess:
 
     def __init__(self, DB: MySQLConnect) -> None:
         self.DB = DB
+        
+    def __init_cost(self, cost: dict):
+        if set(self.__get_all_event_list()) == set(cost.keys()):
+            self.__RESULT['COSTING'] = cost
+        else:
+            raise ValueError(f"SET EVENTS -> {self.__get_all_event_list()}")
 
     def __main_loop(self, session_name) -> None:
         roll_list = self.DB.roll_list_for_session(session_name)
         self.__RESULT['roll list'] = [str(n) for n in roll_list]
-
         
         for i, roll_no in enumerate(roll_list, 1):
         
@@ -310,6 +315,7 @@ class DataPreprocess:
                 results = {}
                 required = params['required']
                 type_ = params['type']
+                thresh = required[1]
 
                 if type_ == 'interval':
                     pairs = required[0]
@@ -326,7 +332,7 @@ class DataPreprocess:
                     results['start time'] = [str(n) for n in event_start_time]
                     results['happened for'] = [int(n) for n in time_delta]
                     results['total time'] = int(sum(time_delta))
-                    results['total time happened'] = int(len(time_delta))
+                    results['total times happened'] = int(len(time_delta))
                     results['happened'] = True if results['start time'] else False
 
                 elif type_ == 'keypress':
@@ -335,7 +341,7 @@ class DataPreprocess:
                     results['start time'] = [str(n) for n in time_values]
                     results['happened for'] = []
                     results['total time'] = 0
-                    results['total time happened'] = int(len(time_values))
+                    results['total times happened'] = int(len(time_values))
                     results['happened'] = True if results['start time'] else False
 
                     checker = time_values
@@ -352,13 +358,16 @@ class DataPreprocess:
                     results['start time'] = [str(n) for n in time_values]
                     results['happened for'] = []
                     results['total time'] = 0
-                    results['total time happened'] = total_key_press
+                    results['total times happened'] = total_key_press
                     results['happened'] = True if total_key_press else False
                     
                     checker = time_values
 
 
                 else: continue
+
+                results['penalty'] = self.penalty(results['total times happened'], results['total time'], self.__RESULT['COSTING'][condition])
+                results['over all'] = self.thresh(results['penalty'], thresh)
 
 
                 #overall calculations
@@ -372,12 +381,19 @@ class DataPreprocess:
 
                 if 'total_time' not in self.__RESULT['event summary'][condition]: self.__RESULT['event summary'][condition]['total_time'] = array([])
                 self.__RESULT['event summary'][condition]['total_time'] = append(self.__RESULT['event summary'][condition]['total_time'], sum(checker) if (checker.dtype == 'float64') or (checker.dtype == 'int64') or (checker.dtype == 'int32') else 0)
+                
+                if 'over all avg' not in self.__RESULT['event summary'][condition]: self.__RESULT['event summary'][condition]['over all avg'] = array([])
+                self.__RESULT['event summary'][condition]['over all avg'] = append(self.__RESULT['event summary'][condition]['over all avg'], results['over all'])
+                
+                if 'penalty avg' not in self.__RESULT['event summary'][condition]: self.__RESULT['event summary'][condition]['penalty avg'] = array([])
+                self.__RESULT['event summary'][condition]['penalty avg'] = append(self.__RESULT['event summary'][condition]['penalty avg'], results['penalty'])
 
 
                 # SCORE
                 self.__OPP[condition]['results'][roll_no] = results
-            
 
+
+        # refining event summary
         for event, summary in self.__RESULT['event summary'].items():
             for operation, value in summary.items():
                 if operation == 'avg': self.__RESULT['event summary'][event]['avg'] = 0 if isnan(mean(value)) else float(mean(value))
@@ -386,11 +402,30 @@ class DataPreprocess:
 
                 if operation == 'total_time': self.__RESULT['event summary'][event]['total_time'] = 0 if isnan(sum(value)) else int(sum(value))
 
+                if operation == 'over all avg': self.__RESULT['event summary'][event]['over all avg'] = 0 if isnan(mean(value)) else float(mean(value))
+                
+                if operation == 'penalty avg': self.__RESULT['event summary'][event]['penalty avg'] = 0 if isnan(mean(value)) else float(mean(value))
 
-    def generate_results(self, session_name):
+
+    def generate_results(self, session_name, cost):
+        self.__init_cost(cost)
         self.__main_loop(session_name)
         self.__RESULT['OOP'] = self.__OPP
-        return self.__RESULT    
+        self.__RESULT['EVENT_LIST'] = self.__get_all_event_list()
+        return self.__RESULT
+                    
+    
+    def __get_all_event_list(self): return list(self.__OPP.keys())
 
     
+    def penalty(self, times, total, cost):
+        total = total if total else 1
+        return cost * (times + (total * 0.01) + ((times / total) * 0.01))
+
+
+    def thresh(self, penalty, thresh_params):
+        limit = self.penalty(*thresh_params)
+        return 100 if (penalty / limit) > 1 else (penalty / limit) * 100
+    
+
     def get_results(self): return self.__OPP

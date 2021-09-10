@@ -40,7 +40,20 @@ def test():
     session_name = 'Sample Examination 2021 Day 1'
     penalties = score_calculator.calculate_score(session_name, cost)
 
-    r1 = calc.generate_results(session_name)
+    cost = {
+        "missing for": 5,
+        "looking away": 5,
+        "tab changed": 5,
+        "looking down": 5,
+        "client lost focus": 5,
+        "Alt key press": 5,
+        "Windows key press": 5,
+        "Key press": 5,
+        "Left click": 5,
+        "Right click": 5,
+    }
+
+    r1 = calc.generate_results(session_name, cost)
     
     
     data = {'penalties': penalties, 'result 2': r1}
