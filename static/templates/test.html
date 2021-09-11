@@ -93,7 +93,7 @@
             </div>
             <div class="col-6">
                 <div style="text-align: center;">
-                    <h3>Penalties</h3>
+                    <!-- <h3>Penalties</h3> -->
                     <!-- <div id="d3-container" /> -->
                     <canvas id="myChart" width="400" height="400"></canvas>
                   </div>
@@ -120,8 +120,22 @@
     const macro_block = document.getElementById("macro_conditions")
 
     var data = {{ value | tojson }};
-    cons ole.log(data['result 2'])
+    console.log(data['result 2'])
+    // console.log(data['result 2']["EVENT_LIST"])
 
+    var new_data = data['result 2']
+    console.log(new_data)
+
+    var events = new_data["EVENT_LIST"]
+    console.log(events)
+    var global_avg_per_event = []
+
+    for (i in events){
+        console.log(event)
+        let temp = new_data["event summary"][events[i]]["over all avg"]
+        console.log(temp)
+        global_avg_per_event.push(temp)
+    }
 
     Array.from(rolls).forEach(el => {
         el.addEventListener('click', ev => {
@@ -139,7 +153,16 @@
         var f_type = Object.assign({}, type_1, type_2);
 
         // get_data_graph(overall_list)
-        change_graph(f_type)
+        // change_graph(f_type)
+        let curr_stu_data = []
+        for (i in events){
+            // console.log(event)
+            let temp = new_data["OOP"][events[i]]["results"][for_no]["over all"]
+            // console.log(temp)
+            curr_stu_data.push(temp)
+        }
+        change_graph(curr_stu_data)
+
 
         macro_block.style.display = "block"
 
@@ -173,8 +196,12 @@
             roll_out_body.appendChild(tr)
         }
     }
+</script>
 
-    
+<script>
+    const table_list = document.getElementById("roll_out_body").childNodes;
+    console.log(table_list)
+
 </script>
 
 <script type="text/javascript" src="/static/Proctoring/grapher.js"></script>
