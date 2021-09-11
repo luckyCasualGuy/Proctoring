@@ -146,11 +146,6 @@
 
     function get_table_body(for_no) {
         roll_out_body.innerHTML = ""
-        
-        var type_1 = data['penalties'][for_no]['type 1']
-        var type_2 = data['penalties'][for_no]['type 2']
-        // var overall_list = data['penalties']
-        var f_type = Object.assign({}, type_1, type_2);
 
         // get_data_graph(overall_list)
         // change_graph(f_type)
@@ -166,30 +161,17 @@
 
         macro_block.style.display = "block"
 
-        for (var key in type_1) {
-            // console.log(key, type_1[key])
+        var OOP = new_data["OOP"]
+        for (var event_name in OOP) {
+            event_details = OOP[event_name]['results'][for_no]
 
+            event_overall = event_details['over all']
             var tr = document.createElement('tr')
             tr.innerHTML = 
-            `<td> `+ key +`</td>
+            `<td> `+ event_name +`</td>
                 <td>
                     <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: `+type_1[key]+`%" aria-valuenow="`+type_1[key]+`" aria-valuemin="0" aria-valuemax="100">
-                        </div>
-                    </div>
-                </td>`
-            roll_out_body.appendChild(tr)
-        }
-
-        for (var key in type_2) {
-            // console.log(key, type_2[key])
-
-            var tr = document.createElement('tr')
-            tr.innerHTML = 
-            `<td> `+ key +`</td>
-                <td>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: `+type_2[key]+`%" aria-valuenow="`+type_2[key]+`" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: `+event_overall+`%" aria-valuenow="`+event_overall+`" aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
                 </td>`
@@ -200,8 +182,7 @@
 
 <script>
     const table_list = document.getElementById("roll_out_body").childNodes;
-    console.log(table_list)
-
+    // console.log(table_list)
 </script>
 
 <script type="text/javascript" src="/static/Proctoring/grapher.js"></script>

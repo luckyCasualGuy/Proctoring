@@ -1,4 +1,5 @@
 from datetime import time, datetime
+from os import stat
 from weakref import KeyedRef
 from numpy import ndarray, mean, array, append, mean, isnan
 from pandas import DataFrame, read_csv
@@ -229,13 +230,13 @@ class CalculateResult:
         db['timestamp'] = db['timestamp'].map(lambda x: parse(x))
 
 
-class CheatCombination: pass 
 
 class DataPreprocess:
     __RESULT = {
         'OOP': 'Not Set',
         'roll list': 'Not Set',
-        'event summary': {}
+        'event summary': {},
+        'senario result': {}
     }
 
     __OPP = {
@@ -290,7 +291,31 @@ class DataPreprocess:
             'required': [('LOOKING DOWN START',), (10, 1, 5)],
             'results': {},
         },
+        "Page leave": {
+            'type': 'end',
+            'required': [('PAGE LEAVE',), (2, 0, 5)],
+            'results': {},
+        },
     }
+
+
+    __SENARIOS = [
+        {
+            'name': 'Moving from seat',
+            'required': ['missing for'],
+            'type': 'overall thresholding'
+        },
+        {
+            'name': 'Copying',
+            'required': ['Right click', 'tab changed', 'client lost focus'],
+            'type': 'overall thresholding'
+        },
+        {
+            'name': 'Reading from notes',
+            'required': ['looking down', 'looking away'],
+            'type': 'overall thresholding'
+        },
+    ]
 
 
     def __init__(self, DB: MySQLConnect) -> None:
@@ -363,11 +388,21 @@ class DataPreprocess:
                     
                     checker = time_values
 
+                elif type_ == 'end':
+                    time_values = df[df['event'].isin(required[0])]['timestamp'].values
+                    results['start time'] = [str(n) for n in time_values]
+                    results['happened for'] = []
+                    results['total time'] = 0
+                    results['total times happened'] = int(len(time_values))
+                    results['happened'] = True if results['total times happened'] > 1 else False
+                    
+                    checker = time_values
+
 
                 else: continue
 
                 results['penalty'] = self.penalty(results['total times happened'], results['total time'], self.__RESULT['COSTING'][condition])
-                results['over all'] = self.thresh(results['penalty'], thresh) 
+                results['over all'] = self.thresh(results['penalty'], thresh)
 
                 #overall calculations
                 if condition not in self.__RESULT['event summary']: self.__RESULT['event summary'][condition] = {}
@@ -411,6 +446,8 @@ class DataPreprocess:
         self.__main_loop(session_name)
         self.__RESULT['OOP'] = self.__OPP
         self.__RESULT['EVENT_LIST'] = self.__get_all_event_list()
+        self.check_senarios()
+        self.__RESULT['SENARIO_LIST'] = [senario['name'] for senario in self.__SENARIOS]
         return self.__RESULT
                     
     
@@ -425,6 +462,30 @@ class DataPreprocess:
     def thresh(self, penalty, thresh_params):
         limit = self.penalty(*thresh_params)
         return 100 if (penalty / limit) > 1 else (penalty / limit) * 100
-    
 
     def get_results(self): return self.__OPP
+
+
+    def check_senarios(self):
+            for roll_no in self.__RESULT['roll list']:
+                senario_result = {}
+                for senario in self.__SENARIOS:
+                    senario_result[senario['name']] = {}
+                    senario_result[senario['name']]['required'] = []
+                    
+                    if senario['type'] == 'overall thresholding':
+                        thresh_columns = senario['required']
+                        
+                        status = False
+                        for event in thresh_columns:
+                            overall = self.__OPP[event]['results'][roll_no]['over all']
+                            if overall == 100 and not status: status = True
+                            print(overall, status)
+                            if status: break
+
+                        senario_result[senario['name']]['status'] = status
+                    
+                    senario_result[senario['name']]['required'] = thresh_columns
+                    
+
+                self.__RESULT['senario result'][roll_no] = senario_result
