@@ -38,7 +38,7 @@ def hello_world_post():
 def test():
     cost = 5
     session_name = 'Sample Examination 2021 Day 1'
-    penalties = score_calculator.calculate_score(session_name, cost)
+    # penalties = score_calculator.calculate_score(session_name, cost)
 
     cost = {
         "missing for": 5,
@@ -52,12 +52,16 @@ def test():
         "Left click": 5,
         "Right click": 5,
         "Page leave": 5,
+        "Copy": 5,
+        "Paste": 5,
     }
 
     r1 = calc.generate_results(session_name, cost)
     # calc.check_senarios()
     
-    data = {'penalties': penalties, 'result 2': r1}
+    data = {
+        # 'penalties': penalties, 
+        'result 2': r1}
 
     return render_template("test.html", value=data)
 

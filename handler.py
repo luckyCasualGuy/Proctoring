@@ -265,7 +265,6 @@ class DataPreprocess:
             'required': [('CLIENT PAGE FOCUS LOST', 'CLIENT PAGE FOCUS GAINED'), (10, 6*(10**3), 5)],
             'results': {},
         },
-
         "Alt key press": {
             'type': 'keypress',
             'required': [('ALT KEYPRESS DETECTED',), (10, 1, 5)],
@@ -274,6 +273,16 @@ class DataPreprocess:
         "Windows key press": {
             'type': 'keypress',
             'required': [('WINDOWS KEYPRESS DETECTED',),  (10, 1, 5)],
+            'results': {},
+        },
+        "Copy": {
+            'type': 'keypress',
+            'required': [('CUT DETECTED', 'COPY DETECTED'),  (10, 1, 5)],
+            'results': {},
+        },
+        "Paste": {
+            'type': 'keypress',
+            'required': [('PASTE DETECTED',),  (10, 1, 5)],
             'results': {},
         },
         "Key press": {
@@ -306,13 +315,18 @@ class DataPreprocess:
             'type': 'overall thresholding'
         },
         {
-            'name': 'Copying',
-            'required': ['Right click', 'tab changed', 'client lost focus'],
+            'name': 'Copying/Googleing',
+            'required': ['Copy', 'tab changed', 'client lost focus', 'Paste'],
             'type': 'overall thresholding'
         },
         {
             'name': 'Reading from notes',
-            'required': ['looking down', 'looking away'],
+            'required': ['looking down'],
+            'type': 'overall thresholding'
+        },
+        {
+            'name': 'Taking help',
+            'required': ['looking away'],
             'type': 'overall thresholding'
         },
     ]
@@ -447,7 +461,7 @@ class DataPreprocess:
         self.__RESULT['OOP'] = self.__OPP
         self.__RESULT['EVENT_LIST'] = self.__get_all_event_list()
         self.check_senarios()
-        self.__RESULT['SENARIO_LIST'] = [senario['name'] for senario in self.__SENARIOS]
+        self.__RESULT['SENARIO_LIST'] = {senario['name']:{'required': senario['required']} for senario in self.__SENARIOS}
         return self.__RESULT
                     
     
@@ -469,9 +483,9 @@ class DataPreprocess:
     def check_senarios(self):
             for roll_no in self.__RESULT['roll list']:
                 senario_result = {}
+                count = 0
                 for senario in self.__SENARIOS:
                     senario_result[senario['name']] = {}
-                    senario_result[senario['name']]['required'] = []
                     
                     if senario['type'] == 'overall thresholding':
                         thresh_columns = senario['required']
@@ -480,12 +494,15 @@ class DataPreprocess:
                         for event in thresh_columns:
                             overall = self.__OPP[event]['results'][roll_no]['over all']
                             if overall == 100 and not status: status = True
-                            print(overall, status)
-                            if status: break
+
+                            if status:
+                                count += 1 
+                            else:
+                                count = 0
+                                break
 
                         senario_result[senario['name']]['status'] = status
-                    
-                    senario_result[senario['name']]['required'] = thresh_columns
-                    
+
 
                 self.__RESULT['senario result'][roll_no] = senario_result
+                self.__RESULT['senario result'][roll_no]['total'] = count

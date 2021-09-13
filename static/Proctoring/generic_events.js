@@ -31,6 +31,7 @@ class TabChange {
                 this.out_data['event'] = 'TAB CHANGE VISIBLE'
                 this.out_data['timestamp'] = timeStamp
             }
+            
             else {
                 this.change_time.push(timeStamp)
                 this.out_data['event'] = 'TAB CHANGE INVISIBLE'
@@ -41,7 +42,6 @@ class TabChange {
             this.out(this.out_data)
         })
     }
-
 }
 
 
@@ -98,6 +98,39 @@ class FocusChange {
             }
         })
 
+    }
+}
+
+
+class CopyCutPaste {
+    constructor(out, params) {
+        this.out = out
+        this.params = params
+
+        this.out_data = {
+            'event': 'NAN',
+            'timestamp': 'NAN',
+            'display_msg': true,
+            'message': "Do not copy or cut text",
+            'beacon': false
+        }
+    }
+
+    start_checking() {
+        var evs = Array.from(['copy', 'cut', 'paste'])
+        for (var i in evs) {
+            parent.document.getElementById('client').contentWindow.addEventListener(evs[i], event => {
+                console.log('!!!', evs[i])
+                if (event['type'] === 'copy') this.out_data['event'] = 'COPY DETECTED'
+                if (event['type'] === 'cut') this.out_data['event'] = 'CUT DETECTED'
+                if (event['type'] === 'paste') this.out_data['event'] = 'PASTE DETECTED'
+                
+                console.log(event)
+
+                this.out_data['timestamp'] = new Date()
+                this.out(this.out_data)
+            })
+        }
     }
 }
 
@@ -159,7 +192,6 @@ class TabChangeKey {
             this.out(out_data)
         }
     }
-
 }
 
 
