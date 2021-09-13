@@ -8,6 +8,7 @@ const EVENT_BASED_TASK = [
     [TabChange, {}],
     [FocusChange, {}],
     [TabChangeKey, {}],
+    [CopyCutPaste, {}],
     [PageLeave, {}],
     [KeyMouseTrap, {}],
     [Mediapipe, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas}]
