@@ -39,7 +39,7 @@ const config = {
         plugins: {
         title: {
             display: true,
-            text: 'Chart.js Radar Chart'
+            text: 'Session Comparision'
         }
         }
     },

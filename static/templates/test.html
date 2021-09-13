@@ -83,11 +83,6 @@
                     </tbody>
                 </table>
                 <div id = "macro_conditions" style="display: none;">
-                    <a tabindex="0" class="btn btn-l btn-danger" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Dismissible popover" data-bs-content="And here's some amazing content. It's very engaging. Right?">Copying</a>
-                    <a tabindex="0" class="btn btn-l btn-info" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Dismissible popover" data-bs-content="And here's some amazing content. It's very engaging. Right?">Googling</a>
-                    <a tabindex="0" class="btn btn-l btn-info" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Dismissible popover" data-bs-content="And here's some amazing content. It's very engaging. Right?">Talking</a>
-                    <a tabindex="0" class="btn btn-l btn-danger" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Dismissible popover" data-bs-content="And here's some amazing content. It's very engaging. Right?">Reading from notes</a>
-                    <a tabindex="0" class="btn btn-l btn-info" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Dismissible popover" data-bs-content="And here's some amazing content. It's very engaging. Right?" style="margin: 5px;">Moving from seat</a>
                 </div>
 
             </div>
@@ -167,8 +162,9 @@
 
             event_overall = event_details['over all']
             var tr = document.createElement('tr')
+            tr.id = event_name
             tr.innerHTML = 
-            `<td> `+ event_name +`</td>
+                `<td> `+ event_name +`</td>
                 <td>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: `+event_overall+`%" aria-valuenow="`+event_overall+`" aria-valuemin="0" aria-valuemax="100">
@@ -177,11 +173,26 @@
                 </td>`
             roll_out_body.appendChild(tr)
         }
+
+        let combo = new_data["senario result"][for_no]
+
+        for (let i in combo){
+            let macro_event = combo[i]
+            if (macro_event["status"] == true){
+
+                // make_macro_button()
+            }
+        }
     }
+
+    function make_macro_button(text){
+        macro_block.appendChild(`<button type="button" class="btn btn-primary macro">`+text+`</button>`)
+    }
+
 </script>
 
 <script>
-    const table_list = document.getElementById("roll_out_body").childNodes;
+    // const table_list = document.getElementById("roll_out_body").childNodes;
     // console.log(table_list)
 </script>
 

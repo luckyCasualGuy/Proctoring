@@ -401,7 +401,7 @@ class DataPreprocess:
 
                 else: continue
 
-                results['penalty'] = self.penalty(results['total times happened'], results['total time'], self.__RESULT['COSTING'][condition])
+                results['penalty'] = self.penalty(results['total times happened'], results['total time'], self.__RESULT['COSTING'][condition]) if results["happened"] else 0
                 results['over all'] = self.thresh(results['penalty'], thresh)
 
                 #overall calculations
