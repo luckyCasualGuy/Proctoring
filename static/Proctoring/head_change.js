@@ -110,7 +110,7 @@ class HeadChange{
             let angles = this.calculate_head_rotation_v_h(landmarks)
 
             let raw_status = this.check_case_for_head_status(angles)
-            console.log(raw_status)
+            // console.log(raw_status)
 
             if((raw_status !== "DOWN BUFFERING") && (raw_status !== "AWAY BUFFERING")){
                 this.current_head_status = raw_status
@@ -134,13 +134,13 @@ class HeadChange{
         }else{
             if (this.missing_person <= 100){
                 this.missing_person++
-                console.log("MISSING BUFFERING")
+                // console.log("MISSING BUFFERING")
             }else{
                 if(this.missing_person_flag == "found"){
                     this.missing_person_flag = "missing"
                     this.out(this.get_out_data("MISSING PERSON", "START"))
                 }
-                console.log("MISSING")
+                // console.log("MISSING")
             }
         }
     }

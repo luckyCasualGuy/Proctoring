@@ -17,7 +17,11 @@ class MySQLConnect:
     def __init__(self, flask_app) -> None:
         self.app = flask_app
         self.mysql = MySQL(self.app)
-
+    
+    def log_image_db(self, data):
+        cursor = self.mysql.connection.cursor()
+        cursor.execute(f"INSERT INTO images (roll_no, session_name, image, timestamp) VALUES ({data['roll_no']}, '{data['session']}', '{data['image']}', '{data['timestamp']}');")
+        self.mysql.connection.commit()
 
     def log_to_db(self, data):
         cursor = self.mysql.connection.cursor()
