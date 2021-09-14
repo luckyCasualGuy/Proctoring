@@ -65,6 +65,13 @@ def test():
 
     return render_template("test.html", value=data)
 
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+
+@app.route("/encrypt/", methods=['POST'])
+def encrypt():
+    pass
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002,debug=False)

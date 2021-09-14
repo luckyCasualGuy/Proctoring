@@ -16,6 +16,9 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
 </head>
 <body>
@@ -38,19 +41,25 @@
     const roll = document.getElementById('roll')
     let ready = false
     
+    var encrypted = CryptoJS.AES.encrypt("Message", "AZYO").toString()
+    console.log(encrypted)
+    var decrypted = CryptoJS.AES.decrypt(encrypted, "AZYO");
+    console.log(decrypted.toString(CryptoJS.enc.Utf8))
+
     const roll_no_in = parent.document.getElementById('roll_no');
     roll_no_in.addEventListener('change', ev => {
         roll.innerHTML = roll_no_in.value;
 
         myStorage = window.localStorage;
-        var localStorage.getItem('roll no')
+        var got_no = localStorage.getItem('roll no')
+        console.log('got this', got_no)
 
-        localStorage.setItem('roll no', roll_no_in.value);
+        if (!got_no)
+            localStorage.setItem('X', CryptoJS.AES.encrypt("roll_no_in.value", "AZYO").toString());
 
         ready = true
     })
 </script>
-
 
 <script src="/static/Proctoring/head_change.js"></script>
 <script src="/static/Proctoring/generic_events.js"></script>
