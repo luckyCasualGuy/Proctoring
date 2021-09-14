@@ -11,6 +11,7 @@ const EVENT_BASED_TASK = [
     [CopyCutPaste, {}],
     [PageLeave, {}],
     [KeyMouseTrap, {}],
+    // [CapturePics, {}],
     [Mediapipe, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas}]
 ];
 
@@ -46,6 +47,28 @@ function out(out_data) {
         sendData(out_data, data => console.log('sent sucsessfully', data))
     }
 }
+
+let interval = 0
+setInterval(
+    function(){
+        if (interval < 10){
+            let pic = parent_canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+            let out_data = {
+                'event': 'IMAGE',
+                'image': pic,
+                'timestamp': new Date(),
+                'display_msg': false,
+                'message': "",
+                'beacon': false
+            }
+            // console.log(out_data["image"])
+            console.log("sent image");
+            interval += 1
+            out(out_data)
+        }
+    }, 
+    5000
+);
 
 start_element.addEventListener('click', ev => {
     if (ready) {

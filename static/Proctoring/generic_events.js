@@ -284,4 +284,3 @@ class KeyMouseTrap {
         event.preventDefault()
     }
 }
-

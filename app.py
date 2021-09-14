@@ -2,6 +2,8 @@ from flask import Flask, json
 from flask import render_template
 from flask import request
 import json
+from PIL import Image
+import StringIO
 
 from handler import MySQLConnect, CalculateResult, DataPreprocess
 
@@ -9,8 +11,8 @@ from handler import MySQLConnect, CalculateResult, DataPreprocess
 app = Flask(__name__, static_url_path='/static',template_folder="static/templates")
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1Password!'
-# app.config['MYSQL_PASSWORD'] = '1234'
+# app.config['MYSQL_PASSWORD'] = '1Password!'
+app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'procter'
 
 app.config['DEBUG'] = True
@@ -29,8 +31,13 @@ def hello_world_post():
     if not data:
         beacon_log = request.data.decode('utf8')
         data = json.loads(beacon_log)
+    # print(len(data["image"]))
     
-    sql.log_to_db(data)
+    if data["event"] == "IMAGE":
+        print(data)
+        sql.log_image_db(data)
+    else:
+        sql.log_to_db(data)
 
     return {'comment': 'received'}
 
