@@ -1,17 +1,6 @@
-tab change *10
-focus change *10
+https://www.datatables.net/examples/styling/bootstrap5.html
 
-
-looking away *low
-
-looking away & no key stroke & no focus <--- no problem
-
-LOOKING AWAY START
-LOOKING DOWN START
-MISSING PERSON START
-TAB CHANGE INVISIBLE
-ALT KEYPRESS DETECTED
-KEY TRAPS
-PAGE LEAVE
-WINDOWS KEYPRESS DETECTED
-
+Go to Download
+Select the options you want in your data table
+copy generated cdn
+use it as per instruction

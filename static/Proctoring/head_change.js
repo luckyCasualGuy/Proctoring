@@ -34,7 +34,6 @@ class Mediapipe {
         this.camera.start()
         this.params["start_flag"] = true
     }
-
 }
 
 

@@ -20,6 +20,20 @@ class MySQLConnect:
         self.app = flask_app
         self.mysql = MySQL(self.app)
     
+    def log_encryption_details(self, data):
+        cursor = self.mysql.connection.cursor()
+        print(f"INSERT INTO encryption_details (roll_no, session_name, nounce, tag, data) VALUES ('{data['roll_no']}', '{data['session']}', '{data['nounce']}', '{data['tag']}', '{data['data']}');")
+        cursor.execute(f"INSERT INTO encryption_details (roll_no, session_name, nounce, tag, data) VALUES ({data['roll_no']}, '{data['session']}', %s, %s, %s);", [data['nounce'], data['tag'], data['data'],])
+        self.mysql.connection.commit()
+
+    def get_nounce_tag_data(self, roll_no, session):
+        cursor: Cursor = self.mysql.connection.cursor()
+        cursor.execute(f"SELECT nounce, tag, data FROM encryption_details WHERE session_name='{session}' AND roll_no='{roll_no}' ORDER BY encrypt_id ASC")
+        logs = cursor.fetchall()
+        self.mysql.connection.commit()
+
+        return logs
+
     def log_image_db(self, data):
 
         student_face_path = Path(f'''./static/face_imgs/{data['session']}/{data['roll_no']}/''')
