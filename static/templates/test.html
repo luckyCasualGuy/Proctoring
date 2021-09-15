@@ -159,7 +159,7 @@
         for (var scenario in new_data['SENARIO_LIST']) {
             var status = new_data['senario result'][for_no][scenario]['status']
             var class_select = (status? "btn-danger" : "btn-info")
-            macro_block.innerHTML += `<a tabindex="0" class="btn btn-l ` + class_select + `" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Note" data-bs-content="Check out the highlighted columns">`+scenario+`</a>`
+            macro_block.innerHTML += `<a style="margine:5px;" tabindex="0" class="btn btn-l mx-1 ` + class_select + `" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Note" data-bs-content="Check out the highlighted columns">`+scenario+`</a>`
         }
 
         Array.from(macro_block.childNodes).forEach(el => {

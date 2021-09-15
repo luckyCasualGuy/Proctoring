@@ -6,3 +6,13 @@ CREATE TABLE `procter`.`logs` (
   `timestamp` VARCHAR(55) NOT NULL,
   PRIMARY KEY (`log_id`),
   UNIQUE INDEX `log_id_UNIQUE` (`log_id` ASC) VISIBLE);
+
+
+  CREATE TABLE `procter`.`encryption_details` (
+  `encrypt_id` INT NOT NULL AUTO_INCREMENT,
+  `roll_no` VARCHAR(45) NOT NULL,
+  `session_name` VARCHAR(45) NOT NULL,
+  `nounce` BINARY(64) NOT NULL,
+  `tag` BINARY(64) NOT NULL,
+  `data` BINARY(64) NOT NULL,
+  PRIMARY KEY (`encrypt_id`));
