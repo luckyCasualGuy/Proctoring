@@ -3,6 +3,7 @@ const video_element = document.getElementById('input_video')
 const parent_canvas = parent.document.getElementById('parent_canvas')
 const ALERT = parent.document.getElementById('ALERT')
 const alert_wrapper = parent.document.getElementById('alert_wrapper')
+var media_start = false
 
 const EVENT_BASED_TASK = [
     [TabChange, {}],
@@ -12,7 +13,7 @@ const EVENT_BASED_TASK = [
     [PageLeave, {}],
     [KeyMouseTrap, {}],
     // [CapturePics, {}],
-    [Mediapipe, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas}]
+    [Mediapipe, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas, "start_flag": media_start}]
 ];
 
 
@@ -51,7 +52,8 @@ function out(out_data) {
 let interval = 0
 setInterval(
     function(){
-        if (interval < 10){
+        console.log(media_start)
+        if (interval < 10 && media_start){
             let pic = parent_canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
             let out_data = {
                 'event': 'IMAGE',
@@ -72,6 +74,7 @@ setInterval(
 
 start_element.addEventListener('click', ev => {
     if (ready) {
+        media_start = true
         EVENT_BASED_TASK.forEach(task => {
             let task_ = new task[0](out, task[1])
             task_.start_checking()

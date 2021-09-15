@@ -8,6 +8,8 @@ from flask_mysqldb import MySQL
 from MySQLdb.cursors import Cursor
 from dateutil.parser import parse
 from pandas.core.series import Series
+import base64
+import numpy as np
 
 
 USER_LOGS = Path('user logs')
@@ -19,9 +21,39 @@ class MySQLConnect:
         self.mysql = MySQL(self.app)
     
     def log_image_db(self, data):
+
+        student_face_path = Path(f'''./static/face_imgs/{data['session']}/{data['roll_no']}/''')
+
+        # stu_f_p_exists = student_face_path.exists()
+        student_face_path.mkdir(exist_ok=True)
+
+        face_image_file = student_face_path/ f"{np.random.randint(10000, 99999)}.png"
+        face_path = str(face_image_file)
+
+        # face_image_file.write_bytes(base64.b64decode(data['image']))
+        # data['image'].save(str(face_image_file))
+
+        file = data['image']
+        format, imgstr = file.split(';base64,')
+        # ext = format.split('/')[-1]
+        face_image_file.write_bytes(base64.b64decode(imgstr))
+
+        # a = Path('./sample')
+        # a.exists() # true false
+        # # a.mkdir(exist_ok=True)
+        # f = a / 's.png'
+        # data = b"image"
+        # # f.write_bytes(bytes)
+        # print(f.name)
+        # print(f.stem)
+        # print(f.parent)
+
         cursor = self.mysql.connection.cursor()
-        cursor.execute(f"INSERT INTO images (roll_no, session_name, image, timestamp) VALUES ({data['roll_no']}, '{data['session']}', '{data['image']}', '{data['timestamp']}');")
+        cursor.execute(f"INSERT INTO images (roll_no, session_name, image, timestamp) VALUES ({data['roll_no']}, '{data['session']}', %s, '{data['timestamp']}');",(face_path,))
         self.mysql.connection.commit()
+
+    def check_if_path_exists():
+        pass
 
     def log_to_db(self, data):
         cursor = self.mysql.connection.cursor()

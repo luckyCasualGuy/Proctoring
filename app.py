@@ -2,8 +2,6 @@ from flask import Flask, json
 from flask import render_template
 from flask import request
 import json
-from PIL import Image
-import StringIO
 
 from handler import MySQLConnect, CalculateResult, DataPreprocess
 
@@ -34,7 +32,7 @@ def hello_world_post():
     # print(len(data["image"]))
     
     if data["event"] == "IMAGE":
-        print(data)
+        # print(data)
         sql.log_image_db(data)
     else:
         sql.log_to_db(data)

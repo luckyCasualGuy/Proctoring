@@ -32,6 +32,7 @@ class Mediapipe {
     
     start_checking() {
         this.camera.start()
+        this.params["start_flag"] = true
     }
 
 }
