@@ -2,7 +2,6 @@ from flask import Flask, json
 from flask import render_template
 from flask import request
 import json
-
 from handler import MySQLConnect, CalculateResult, DataPreprocess
 
 
