@@ -24,3 +24,12 @@ CREATE TABLE `procter`.`logs` (
   `session_name` VARCHAR(155) NOT NULL,
   PRIMARY KEY (`token_id`))
 COMMENT = 'tracking tokens';
+
+CREATE TABLE `images` (
+  `image_id` int NOT NULL AUTO_INCREMENT,
+  `roll_no` varchar(45) DEFAULT NULL,
+  `session_name` varchar(45) DEFAULT NULL,
+  `image` varchar(100) DEFAULT NULL,
+  `timestamp` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`image_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
