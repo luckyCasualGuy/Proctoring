@@ -11,8 +11,8 @@ from handler import MySQLConnect, CalculateResult, DataPreprocess
 app = Flask(__name__, static_url_path='/static',template_folder="static/templates")
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-# app.config['MYSQL_PASSWORD'] = '1Password!'
-app.config['MYSQL_PASSWORD'] = '1234'
+app.config['MYSQL_PASSWORD'] = '1Password!'
+# app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'procter'
 
 app.config['DEBUG'] = True
@@ -42,11 +42,11 @@ def hello_world_post():
         data = json.loads(beacon_log)
     # print(len(data["image"]))
     
-    if data["event"] == "IMAGE":
+    # if data["event"] == "IMAGE":
         # print(data)
-        sql.log_image_db(data)
-    else:
-        sql.log_to_db(data)
+        # sql.log_image_db(data)
+    # else:
+        # sql.log_to_db(data)
 
     return {'comment': 'received'}
 
@@ -85,25 +85,27 @@ from encrypt.t import Tokenizer
 @app.route("/encrypt/", methods=['POST'])
 def encrypt():
     data = request.json
-    response = {"status": "NA"}
+    result = {"status": "NA"}
 
+    print('--------------------->', data)
     for key in ['session_name', 'roll_no']:
         if key not in data:
-            response['status'] = 'ERROR <REQUIREMENTS DID NOT MATCH>'
+            result['status'] = 'ERROR <REQUIREMENTS DID NOT MATCH>'
             break
 
     t = Tokenizer(sql)
     token = t.set_roll_no(data['session_name'], data['roll_no'])
+    print('--------------------->', token)
     if not token:
-        response['status'] = "INVALID"
+        result['status'] = "INVALID"
     else:
-        response['status'] = "REGISTERED"
-        response['token'] = token
+        result['status'] = "REGISTERED"
+        result['token'] = token
 
-    return response
+    return result
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5002,debug=False)
+    app.run(host='0.0.0.0', port=5002, debug=False)
 
 
 # {title: '  ', weight: ' ', time: ' '}

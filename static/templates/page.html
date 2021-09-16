@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
     
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .outer {
         display: table;
@@ -128,9 +128,13 @@
         }
         else {
             roll_no = roll_no_in.value
+            console.log(':::: sending on click')
             sendDataURL(parent.document.URL + 'encrypt\/', {'session_name': 'sample session 2021 A2015', 'roll_no': roll_no}, res => {
                 if (res.hasOwnProperty('token')) {
                     console.log('token received:::::', res['token'])
+                }
+                else {
+
                 }
 
                 console.log('status:::::', res['status'])
@@ -202,7 +206,7 @@
             url: url_,
             data: JSON.stringify(out_data),
             processData: false,
-            'contentType': 'application/json',
+            contentType: 'application/json',
             cache: false,
             success: data => dothis(data) ,
             error: error => console.error('ERROR SENDING FORM: ', error)
