@@ -8,7 +8,7 @@ CREATE TABLE `procter`.`logs` (
   UNIQUE INDEX `log_id_UNIQUE` (`log_id` ASC) VISIBLE);
 
 
-  CREATE TABLE `procter`.`encryption_details` (
+CREATE TABLE `procter`.`encryption_details` (
   `encrypt_id` INT NOT NULL AUTO_INCREMENT,
   `roll_no` VARCHAR(45) NOT NULL,
   `session_name` VARCHAR(45) NOT NULL,
@@ -16,3 +16,12 @@ CREATE TABLE `procter`.`logs` (
   `tag` BINARY(64) NOT NULL,
   `data` BINARY(64) NOT NULL,
   PRIMARY KEY (`encrypt_id`));
+
+CREATE TABLE `images` (
+  `image_id` int NOT NULL AUTO_INCREMENT,
+  `roll_no` varchar(45) DEFAULT NULL,
+  `session_name` varchar(45) DEFAULT NULL,
+  `image` varchar(100) DEFAULT NULL,
+  `timestamp` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`image_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
