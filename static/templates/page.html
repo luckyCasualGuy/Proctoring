@@ -120,13 +120,22 @@
     const roll_here = document.getElementById('roll_here')
     const roll_no_in = document.getElementById('roll_no');
     var roll_no = ''
-
+    console.log(parent.document.URL + 'encrypt\/')
 
     start.addEventListener('click', ev => {
         if (roll_no === '') {
             document.getElementById('roll_req').innerHTML = "Roll number is required"
         }
         else {
+            roll_no = roll_no_in.value
+            sendDataURL(parent.document.URL + 'encrypt\/', {'session_name': 'sample session 2021 A2015', 'roll_no': roll_no}, res => {
+                if (res.hasOwnProperty('token')) {
+                    console.log('token received:::::', res['token'])
+                }
+
+                console.log('status:::::', res['status'])
+            })
+
             outer.style.display = 'none';
             main.style.display = 'block';
         }
@@ -186,8 +195,18 @@
     }
     }
 
-    // window.addEventListener('blur', ev => {console.log('!!BLUR')});
-    // window.addEventListener('focus', ev => {console.log('!!FOCUS')});
-    // document.state
+    function sendDataURL(url_, out_data, dothis) {
+        $.ajax({
+            type: "POST",
+            enctype: 'JSON',
+            url: url_,
+            data: JSON.stringify(out_data),
+            processData: false,
+            'contentType': 'application/json',
+            cache: false,
+            success: data => dothis(data) ,
+            error: error => console.error('ERROR SENDING FORM: ', error)
+        });
+    }
 </script>
 </html>

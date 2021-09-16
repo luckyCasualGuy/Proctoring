@@ -71,24 +71,26 @@ def test():
 
     return render_template("test.html", value=data)
 
-from encrypt.t import Encrypt
-@app.route("/encrypt/", methods=['GET'])
+from encrypt.t import Tokenizer
+@app.route("/encrypt/", methods=['POST'])
 def encrypt():
-    data = "141".encode('utf-8')
-    print(data)
-    e= Encrypt()
-    key = e.read_key()
-    print(key)
-    n, t, d = e.encrypt(key, data)
-    print(n, t, d)
-    print(type(n), type(t), type(d))
-    # sql.log_encryption_details({'roll_no': '141', 'session': 'session sample 141 A', 'nounce': n, 'tag': t, 'data': d})
-    a = sql.get_nounce_tag_data(data.decode('utf-8'), 'session sample 141 A')
-    print(a[0], type(a[0][0]))
-    org = e.decrypt(key, a, t, d)
-    # org = e.decrypt(key, n, t, d)
-    print(org.decode('utf-8'))
-    return "HELLO"
+    data = request.json
+    response = {"status": "NA"}
+
+    for key in ['session_name', 'roll_no']:
+        if key not in data:
+            response['status'] = 'ERROR <REQUIREMENTS DID NOT MATCH>'
+            break
+
+    t = Tokenizer(sql)
+    token = t.set_roll_no(data['session_name'], data['roll_no'])
+    if not token:
+        response['status'] = "INVALID"
+    else:
+        response['status'] = "REGISTERED"
+        response['token'] = token
+
+    return response
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002,debug=False)
