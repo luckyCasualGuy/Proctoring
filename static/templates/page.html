@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
     
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .outer {
         display: table;
@@ -120,13 +120,26 @@
     const roll_here = document.getElementById('roll_here')
     const roll_no_in = document.getElementById('roll_no');
     var roll_no = ''
-
+    console.log(parent.document.URL + 'encrypt\/')
 
     start.addEventListener('click', ev => {
         if (roll_no === '') {
             document.getElementById('roll_req').innerHTML = "Roll number is required"
         }
         else {
+            roll_no = roll_no_in.value
+            console.log(':::: sending on click')
+            sendDataURL(parent.document.URL + 'encrypt\/', {'session_name': 'sample session 2021 A2015', 'roll_no': roll_no}, res => {
+                if (res.hasOwnProperty('token')) {
+                    console.log('token received:::::', res['token'])
+                }
+                else {
+
+                }
+
+                console.log('status:::::', res['status'])
+            })
+
             outer.style.display = 'none';
             main.style.display = 'block';
         }
@@ -186,8 +199,18 @@
     }
     }
 
-    // window.addEventListener('blur', ev => {console.log('!!BLUR')});
-    // window.addEventListener('focus', ev => {console.log('!!FOCUS')});
-    // document.state
+    function sendDataURL(url_, out_data, dothis) {
+        $.ajax({
+            type: "POST",
+            enctype: 'JSON',
+            url: url_,
+            data: JSON.stringify(out_data),
+            processData: false,
+            contentType: 'application/json',
+            cache: false,
+            success: data => dothis(data) ,
+            error: error => console.error('ERROR SENDING FORM: ', error)
+        });
+    }
 </script>
 </html>

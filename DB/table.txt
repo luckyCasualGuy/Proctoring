@@ -7,8 +7,8 @@ CREATE TABLE `procter`.`logs` (
   PRIMARY KEY (`log_id`),
   UNIQUE INDEX `log_id_UNIQUE` (`log_id` ASC) VISIBLE);
 
-
-CREATE TABLE `procter`.`encryption_details` (
+### not used now
+  CREATE TABLE `procter`.`encryption_details` (
   `encrypt_id` INT NOT NULL AUTO_INCREMENT,
   `roll_no` VARCHAR(45) NOT NULL,
   `session_name` VARCHAR(45) NOT NULL,
@@ -16,6 +16,14 @@ CREATE TABLE `procter`.`encryption_details` (
   `tag` BINARY(64) NOT NULL,
   `data` BINARY(64) NOT NULL,
   PRIMARY KEY (`encrypt_id`));
+
+  CREATE TABLE `procter`.`token` (
+  `token_id` INT NOT NULL AUTO_INCREMENT,
+  `token` VARCHAR(55) NOT NULL,
+  `roll_no` VARCHAR(55) NOT NULL,
+  `session_name` VARCHAR(155) NOT NULL,
+  PRIMARY KEY (`token_id`))
+COMMENT = 'tracking tokens';
 
 CREATE TABLE `images` (
   `image_id` int NOT NULL AUTO_INCREMENT,

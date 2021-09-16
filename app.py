@@ -11,8 +11,8 @@ from handler import MySQLConnect, CalculateResult, DataPreprocess
 app = Flask(__name__, static_url_path='/static',template_folder="static/templates")
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-# app.config['MYSQL_PASSWORD'] = '1Password!'
-app.config['MYSQL_PASSWORD'] = '1234'
+app.config['MYSQL_PASSWORD'] = '1Password!'
+# app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'procter'
 
 app.config['DEBUG'] = True
@@ -42,11 +42,11 @@ def hello_world_post():
         data = json.loads(beacon_log)
     # print(len(data["image"]))
     
-    if data["event"] == "IMAGE":
+    # if data["event"] == "IMAGE":
         # print(data)
-        sql.log_image_db(data)
-    else:
-        sql.log_to_db(data)
+        # sql.log_image_db(data)
+    # else:
+        # sql.log_to_db(data)
 
     return {'comment': 'received'}
 
@@ -81,27 +81,31 @@ def test():
 
     return render_template("test.html", value=data)
 
-from encrypt.t import Encrypt
-@app.route("/encrypt/", methods=['GET'])
+from encrypt.t import Tokenizer
+@app.route("/encrypt/", methods=['POST'])
 def encrypt():
-    data = "141".encode('utf-8')
-    print(data)
-    e= Encrypt()
-    key = e.read_key()
-    print(key)
-    n, t, d = e.encrypt(key, data)
-    print(n, t, d)
-    print(type(n), type(t), type(d))
-    # sql.log_encryption_details({'roll_no': '141', 'session': 'session sample 141 A', 'nounce': n, 'tag': t, 'data': d})
-    a = sql.get_nounce_tag_data(data.decode('utf-8'), 'session sample 141 A')
-    print(a[0], type(a[0][0]))
-    org = e.decrypt(key, a, t, d)
-    # org = e.decrypt(key, n, t, d)
-    print(org.decode('utf-8'))
-    return "HELLO"
+    data = request.json
+    result = {"status": "NA"}
+
+    print('--------------------->', data)
+    for key in ['session_name', 'roll_no']:
+        if key not in data:
+            result['status'] = 'ERROR <REQUIREMENTS DID NOT MATCH>'
+            break
+
+    t = Tokenizer(sql)
+    token = t.set_roll_no(data['session_name'], data['roll_no'])
+    print('--------------------->', token)
+    if not token:
+        result['status'] = "INVALID"
+    else:
+        result['status'] = "REGISTERED"
+        result['token'] = token
+
+    return result
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5002,debug=False)
+    app.run(host='0.0.0.0', port=5002, debug=False)
 
 
 # {title: '  ', weight: ' ', time: ' '}

@@ -22,19 +22,26 @@ class MySQLConnect:
         self.app = flask_app
         self.mysql = MySQL(self.app)
     
-    def log_encryption_details(self, data):
+    def get_roll_no_for_token(self, session_name, token):
         cursor = self.mysql.connection.cursor()
-        print(f"INSERT INTO encryption_details (roll_no, session_name, nounce, tag, data) VALUES ('{data['roll_no']}', '{data['session']}', '{data['nounce']}', '{data['tag']}', '{data['data']}');")
-        cursor.execute(f"INSERT INTO encryption_details (roll_no, session_name, nounce, tag, data) VALUES ({data['roll_no']}, '{data['session']}', %s, %s, %s);", [data['nounce'], data['tag'], data['data'],])
+        cursor.execute(f"SELECT roll_no FROM token WHERE session_name='{session_name}' AND token='{token}' ORDER BY token_id ASC")
+        roll_no = cursor.fetchall()
         self.mysql.connection.commit()
 
-    def get_nounce_tag_data(self, roll_no, session):
-        cursor: Cursor = self.mysql.connection.cursor()
-        cursor.execute(f"SELECT nounce, tag, data FROM encryption_details WHERE session_name='{session}' AND roll_no='{roll_no}' ORDER BY encrypt_id ASC")
-        logs = cursor.fetchall()
+        return roll_no
+
+    def get_token_for_roll_no(self, session_name, roll_no):
+        cursor = self.mysql.connection.cursor()
+        cursor.execute(f"SELECT token FROM token WHERE session_name='{session_name}' AND roll_no='{roll_no}' ORDER BY token_id ASC")
+        token = cursor.fetchall()
         self.mysql.connection.commit()
 
-        return logs
+        return token
+
+    def log_token(self, session_name, roll_no, token):
+        cursor = self.mysql.connection.cursor()
+        cursor.execute(f"INSERT INTO token (roll_no, session_name, token) VALUES ({roll_no}, '{session_name}', '{token}');")
+        self.mysql.connection.commit()
     
     def get_img_paths(self,session,roll_no):
         # data = request.json
