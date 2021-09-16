@@ -2,22 +2,34 @@ from flask import Flask, json
 from flask import render_template
 from flask import request
 import json
+
+from flask.globals import session
+from numpy.core.numeric import roll
 from handler import MySQLConnect, CalculateResult, DataPreprocess
 
 
 app = Flask(__name__, static_url_path='/static',template_folder="static/templates")
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1Password!'
-# app.config['MYSQL_PASSWORD'] = '1234'
+# app.config['MYSQL_PASSWORD'] = '1Password!'
+app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'procter'
 
 app.config['DEBUG'] = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config["send_file"] = True
+app.config["send_from_directory"] = True
 
 sql = MySQLConnect(app)
 score_calculator = CalculateResult(sql)
 calc = DataPreprocess(sql)
+
+@app.route("/get_img/", methods=['POST'])
+def handle_img_req():
+    session = request.json["session"]
+    roll_no = request.json["roll_no"]
+    # return json.dumps(sql.get_img_paths(session,roll_no))
+    return sql.get_img_paths(session,roll_no)
 
 @app.route("/", methods=['GET'])
 def hello_world_get(): return render_template("page.html")

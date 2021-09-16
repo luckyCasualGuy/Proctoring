@@ -12,11 +12,12 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.11.2/sc-2.0.5/sp-1.4.0/datatables.min.css"/>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.11.2/sc-2.0.5/sp-1.4.0/datatables.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
     <style>
         .roll {
             cursor: pointer;
-        }
+        };
     </style>
 </head>
 <body>
@@ -79,6 +80,21 @@
                   </div>
             </div>
         </div>
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Accordion Item #1
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body" id = "image_disp" style="width: 100%; display: flex;">
+                </div>
+              </div>
+            </div>
+        </div>  
+
+        </div>
 
     </div>
 
@@ -122,6 +138,8 @@
 
     function get_table_body(for_no) {
         roll_out_body.innerHTML = ""
+
+        get_images("Sample Examination 2021 Day 1",for_no)
 
         // get_data_graph(overall_list)
         // change_graph(f_type)
@@ -184,6 +202,6 @@
         $('#roll_list').DataTable();
     } );
 </script>
-
+<script type="text/javascript" src="/static/Proctoring/image_get.js"></script>
 <script type="text/javascript" src="/static/Proctoring/grapher.js"></script>
 </html>

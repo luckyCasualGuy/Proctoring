@@ -8,8 +8,10 @@ from flask_mysqldb import MySQL
 from MySQLdb.cursors import Cursor
 from dateutil.parser import parse
 from pandas.core.series import Series
+from PIL import Image
 import base64
 import numpy as np
+import io
 
 
 USER_LOGS = Path('user logs')
@@ -33,6 +35,30 @@ class MySQLConnect:
         self.mysql.connection.commit()
 
         return logs
+    
+    def get_img_paths(self,session,roll_no):
+        # data = request.json
+        cursor: Cursor = self.mysql.connection.cursor()
+        cursor.execute(f"SELECT image FROM images WHERE session_name='{session}' AND roll_no='{roll_no}'")
+        images = cursor.fetchall()
+        self.mysql.connection.commit()
+
+        all_encoded_imgs = ""
+
+        for ims in images:
+            # print(images)
+            path = Path("./"+ims[0])
+            # print("---->", path)
+            pil_img = Image.open(path, mode='r') # reads the PIL image
+            # byte_arr = io.BytesIO()
+            # pil_img.save(byte_arr, format='PNG') # convert the PIL image to byte array
+            # encoded_img = base64.encodebytes(byte_arr.getvalue()).decode('ascii') # encode as base64
+            # all_encoded_imgs = all_encoded_imgs+"||"+encoded_img
+            buffered = io.BytesIO()
+            pil_img.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue())
+            all_encoded_imgs = all_encoded_imgs+"||"+"data:image/png;base64,"+str(img_str)[2:-1]
+        return all_encoded_imgs
 
     def log_image_db(self, data):
 
