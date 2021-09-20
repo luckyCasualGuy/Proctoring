@@ -100,7 +100,8 @@
                 <div id="roll_req" style="color: red;"></div>
             </div>
             <div class="row align-items-center" style="padding: 2rem;">
-                <img style="margin: auto;" id="start" src="/static/start_static.png" alt="start button spins on hover">
+            <!-- /static/start_static.png -->
+                <img style="margin: auto;" id="start" src="http://localhost:5003/sample_test/#" alt="start button spins on hover">
             </div>
           </div>
         </div>
@@ -128,20 +129,33 @@
         }
         else {
             roll_no = roll_no_in.value
-            console.log(':::: sending on click')
-            sendDataURL(parent.document.URL + 'encrypt\/', {'session_name': 'sample session 2021 A2015', 'roll_no': roll_no}, res => {
-                if (res.hasOwnProperty('token')) {
-                    console.log('token received:::::', res['token'])
-                }
-                else {
 
-                }
+            myStorage = window.localStorage;
+            var token = localStorage.getItem('token')
+            console.log('got this', token, typeof(token))
 
-                console.log('status:::::', res['status'])
-            })
+            if (token === 'null' || token === null) {
+                console.log('here')
+                sendDataURL(parent.document.URL + 'encrypt\/', {'session_name': 'sample session 2021 A2015', 'roll_no': roll_no}, res => {
+                    if (res.hasOwnProperty('token')) {
+                        console.log('token received:::::', res['token'])
+                        localStorage.setItem('token', res['token'])
+                        outer.style.display = 'none';
+                        main.style.display = 'block';
+                        ready = true
+                    }
 
-            outer.style.display = 'none';
-            main.style.display = 'block';
+                    if(res['status']==='INVALID') {
+                        document.body.innerHTML = "You Are Not Allowed To Give Exam";
+                    }
+                    
+
+                    console.log('status:::::', res['status'])
+                })
+            }
+            else {
+                document.body.innerHTML = "You Are Not Allowed To Give Exam";
+            }
         }
 
         roll_no_in.style.border = '2px solid red'

@@ -41,22 +41,10 @@
     const roll = document.getElementById('roll')
     let ready = false
     
-    var encrypted = CryptoJS.AES.encrypt("Message", "AZYO").toString()
-    console.log(encrypted)
-    var decrypted = CryptoJS.AES.decrypt(encrypted, "AZYO");
-    console.log(decrypted.toString(CryptoJS.enc.Utf8))
 
     const roll_no_in = parent.document.getElementById('roll_no');
     roll_no_in.addEventListener('change', ev => {
         roll.innerHTML = roll_no_in.value;
-
-        myStorage = window.localStorage;
-        var got_no = localStorage.getItem('roll no')
-        console.log('got this', got_no)
-
-        if (!got_no)
-            localStorage.setItem('X', CryptoJS.AES.encrypt("roll_no_in.value", "AZYO").toString());
-
         ready = true
     })
 </script>
