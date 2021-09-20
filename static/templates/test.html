@@ -18,6 +18,12 @@
         .roll {
             cursor: pointer;
         };
+        #image_disp{
+            display: grid !important;
+            grid-template-columns: repeat(8, 1fr) !important;
+            grid-template-rows: repeat(8, 5vw) !important;
+            grid-gap: 15px !important;
+        }
     </style>
 </head>
 <body>
@@ -80,15 +86,15 @@
                   </div>
             </div>
         </div>
-        <div class="accordion" id="accordionExample">
+        <div class="accordion" id="accordionExample" style="padding-top: 15px;">
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  Accordion Item #1
+                  Student's environment during examination
                 </button>
               </h2>
               <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div class="accordion-body" id = "image_disp" style="width: 100%; display: flex;">
+                <div class="accordion-body" id = "image_disp" style="display: grid ;grid-template-columns: repeat(5, 1fr);grid-template-rows: repeat(2, 1fr); grid-gap: 15px;">
                 </div>
               </div>
             </div>
@@ -176,7 +182,7 @@
         for (var scenario in new_data['SENARIO_LIST']) {
             var status = new_data['senario result'][for_no][scenario]['status']
             var class_select = (status? "btn-danger" : "btn-info")
-            macro_block.innerHTML += `<a style="margine:5px;" tabindex="0" class="btn btn-l mx-1 ` + class_select + `" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Note" data-bs-content="Check out the highlighted columns">`+scenario+`</a>`
+            macro_block.innerHTML += `<a style="margin:5px;" tabindex="0" class="btn btn-l mx-1 ` + class_select + `" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Note" data-bs-content="Check out the highlighted columns">`+scenario+`</a>`
         }
 
         Array.from(macro_block.childNodes).forEach(el => {
