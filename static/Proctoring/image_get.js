@@ -27,9 +27,10 @@ function show_images(data){
         var img_el = document.createElement('img');
         img_el.classList.add("thumbnails")
         img_el.src = imgs[i];
-        img_el.style.flex = "33.33%";
-        img_el.style.width = "300px"
-        img_el.style.padding = "20px"
+        // img_el.style.flex = "33.33%";
+        img_el.style.width = "100%"
+        img_el.style.height = "100%"
+        // img_el.style.padding = "20px"
         img_holder.appendChild(img_el);
     }
 }
