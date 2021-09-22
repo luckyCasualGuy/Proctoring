@@ -105,6 +105,10 @@ def encrypt():
 
     return result
 
+@app.route("/sample/", methods=['GET'])
+def sample():
+    return render_template('sample.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002, debug=False)
 

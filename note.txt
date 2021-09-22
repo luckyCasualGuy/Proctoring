@@ -4,3 +4,9 @@ Go to Download
 Select the options you want in your data table
 copy generated cdn
 use it as per instruction
+
+
+client id
+client name
+client code number of users
+expiry date
