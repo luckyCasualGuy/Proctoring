@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+</head>
+<body></br></br></br></br></br>
+    <div align="center">
+        <div align="center" class="border">
+            <div class="header">
+            <h1 class="word">Register with AZYO</h1>
+            </div></br></br></br>
+        <h2 class="word">
+            <form action= "/client/register/" method="post">
+                <input id="username" name="username" type="text" placeholder="Enter Your Username" class="textbox"/></br></br>
+                <input id="license" name="license" type="text" placeholder="Enter Your license Code" class="textbox"/></br></br>
+                <input id="password" name="password" type="password" placeholder="Enter Your Password" class="textbox"/></br></br>
+                <input id="number_of_users" name="number_of_users" type="text" placeholder="Number of Users" class="textbox"/></br></br>
+                <input type="date" id="start" name="start" placeholder="Start Date"></br></br>
+                <input type="date" id="expiry" name="expiry" placeholder="Expiry Date"></br></br>
+                <input type="submit" class="btn" value="Sign Up"></br>
+            </form>
+        </h2>
+        <p class="bottom">Already have an account?  <a class="bottom" href="{{url_for('client_get_login')}}"> Sign In here</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 from flask import Flask, json
 from flask import render_template
 from flask import request
-import json
+# import json
 
 from flask.globals import session
 from numpy.core.numeric import roll
@@ -11,8 +11,8 @@ from handler import MySQLConnect, CalculateResult, DataPreprocess
 app = Flask(__name__, static_url_path='/static',template_folder="static/templates")
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1Password!'
-# app.config['MYSQL_PASSWORD'] = '1234'
+# app.config['MYSQL_PASSWORD'] = '1Password!'
+app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'procter'
 
 app.config['DEBUG'] = True
@@ -23,6 +23,25 @@ app.config["send_from_directory"] = True
 sql = MySQLConnect(app)
 score_calculator = CalculateResult(sql)
 calc = DataPreprocess(sql)
+
+@app.route("/client/register/", methods=['GET'])
+def client_get_register():
+    return render_template("client/client_register.html")
+
+@app.route("/client/register/", methods=['POST'])
+def client_register():
+    sql.log_new_client(request.form)
+    return render_template("client/client_login.html", msg = "Succesfully registered!")
+
+@app.route("/client/login/", methods=['GET'])
+def client_get_login():
+    return render_template("client/client_login.html", msg = "")
+
+@app.route("/client/login/", methods=['POST'])
+def login_client():
+    dashboard = sql.login_user(request.form)
+    return render_template("client/client_dashboard.html", dash_data = json.dumps(dashboard))
+    # return json.dumps(dashboard)
 
 @app.route("/get_img/", methods=['POST'])
 def handle_img_req():
