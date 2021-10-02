@@ -33,3 +33,14 @@ CREATE TABLE `images` (
   `timestamp` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`image_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `client` (
+  `client_id` int NOT NULL AUTO_INCREMENT,
+  `client_name` varchar(45) DEFAULT NULL,
+  `licence_code` varchar(45) DEFAULT NULL,
+  `no_of_users` varchar(45) DEFAULT NULL,
+  `expiry_date` varchar(45) DEFAULT NULL,
+  `start_date` varchar(45) DEFAULT NULL,
+  `password` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`client_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

@@ -43,6 +43,19 @@ class MySQLConnect:
         cursor.execute(f"INSERT INTO token (roll_no, session_name, token) VALUES ({roll_no}, '{session_name}', '{token}');")
         self.mysql.connection.commit()
     
+    def log_new_client(self, data):
+        cursor = self.mysql.connection.cursor()
+        cursor.execute(f"INSERT INTO client (client_name, licence_code, no_of_users, expiry_date, start_date, password) VALUES (% s, % s, % s, % s, % s, % s);", (data['username'], data['license'], data['number_of_users'], data['expiry'], data['start'], data['password']))
+        self.mysql.connection.commit()
+
+    def login_user(self, data):
+        cursor = self.mysql.connection.cursor()
+        cursor.execute(f"SELECT * FROM client WHERE client_name='{data['username']}' AND password='{data['password']}'")
+        dashboard_data = cursor.fetchone()
+        self.mysql.connection.commit()
+        print(dashboard_data)
+        return dashboard_data
+
     def get_img_paths(self,session,roll_no):
         # data = request.json
         cursor: Cursor = self.mysql.connection.cursor()
