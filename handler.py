@@ -82,10 +82,11 @@ class MySQLConnect:
 
     def log_image_db(self, data):
 
-        student_face_path = Path(f'''./static/face_imgs/{data['session']}/{data['roll_no']}/''')
-
-        # stu_f_p_exists = student_face_path.exists()
+        student_face_path = Path(f'''./static/face_imgs/{data['session']}''')
         student_face_path.mkdir(exist_ok=True)
+        student_face_path = student_face_path / data['roll_no']
+        student_face_path.mkdir(exist_ok=True)
+        # stu_f_p_exists = student_face_path.exists()
 
         face_image_file = student_face_path/ f"{np.random.randint(10000, 99999)}.png"
         face_path = str(face_image_file)
