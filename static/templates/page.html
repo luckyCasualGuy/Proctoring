@@ -109,8 +109,8 @@
     
     <div id="main" style="display: none; margin: 10px;">
         <iframe src="/static/templates/frame1.html" height="40" width="100%" title="Iframe Example" style="display: none;"></iframe>
-        <iframe src="/static/templates/client_page_1.html" height="40" width="100%" title="Iframe Example"></iframe>
-        <!-- <iframe id='client' src="http://localhost:5003/sample_test/#" height="800" width="100%" title="Iframe Example"></iframe> -->
+        <!-- <iframe src="/static/templates/client_page_1.html" height="400" width="100%" title="Iframe Example"></iframe> -->
+        <iframe id='client' src="http://localhost:5003/sample_test/#" height="800" width="100%" title="Iframe Example"></iframe>
     </div>
 </body>
 
@@ -122,6 +122,8 @@
     const roll_here = document.getElementById('roll_here')
     const roll_no_in = document.getElementById('roll_no');
     var roll_no = ''
+    var c_event = ''
+
     console.log(parent.document.URL + 'encrypt\/')
 
     start.addEventListener('click', ev => {
@@ -228,6 +230,8 @@
         });
     }
 
+    
+
     // function addEventListenerAll(target, listener) {
 
     //     // install listeners for all natively triggered events
@@ -257,12 +261,6 @@
     // function send(event) {
     //     window.parent.postMessage(event, '*');
     // }
-
-
-    window.addEventListener('message', receiveMessage, false);
-    function receiveMessage(event) {
-        console.log("got event: " + event.data);
-    }
 
 </script>
 </html>

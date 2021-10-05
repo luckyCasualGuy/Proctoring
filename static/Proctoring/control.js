@@ -16,6 +16,12 @@ const EVENT_BASED_TASK = [
     [Mediapipe, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas, "start_flag": media_start}]
 ];
 
+parent.window.addEventListener('message', receiveMessage, false);
+console.log('###', parent.window)
+function receiveMessage(event) {
+    console.log("got event: " + event.data);
+}
+
 
 function out(out_data) {
     let x;
@@ -30,10 +36,6 @@ function out(out_data) {
 
         // clear interval
         x = setTimeout(2000, () => {
-            // visivliy None
-            // if (alert_wrapper.style.display != "none"){
-            //     alert_wrapper.style.display = "none"
-            // }
             alert_wrapper.style.display = "none"
         })
     }
