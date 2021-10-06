@@ -65,29 +65,29 @@ class FocusChange {
 
     start_checking() {
         // client
-        // parent.document.getElementById('client').contentWindow.addEventListener('blur', ev => {
-        //     this.client_lost = true
+        parent.document.getElementById('client').contentWindow.addEventListener('blur', ev => {
+            this.client_lost = true
 
-        //     this.focus_changed = true
-        //     this.out_data['timestamp'] = new Date()
-        //     this.out_data['event'] = 'CLIENT PAGE FOCUS LOST'
-        //     this.out(this.out_data)
-        // })
+            this.focus_changed = true
+            this.out_data['timestamp'] = new Date()
+            this.out_data['event'] = 'CLIENT PAGE FOCUS LOST'
+            this.out(this.out_data)
+        })
 
-        // parent.document.getElementById('client').contentWindow.addEventListener('focus', ev => {
-            // if (this.window_lost) { 
-            //     this.out_data['timestamp'] = new Date()
-            //     this.out_data['event'] = '*WINDOW PAGE FOCUS GAINED'
+        parent.document.getElementById('client').contentWindow.addEventListener('focus', ev => {
+            if (this.window_lost) { 
+                this.out_data['timestamp'] = new Date()
+                this.out_data['event'] = '*WINDOW PAGE FOCUS GAINED'
 
-            //     this.window_lost = false
-            //     console.log(this.out_data)
-            // }
-        //     if (this.focus_changed) {
-        //         this.client_lost = false
-        //         this.out_data['event'] = 'CLIENT PAGE FOCUS GAINED'
-        //         this.out(this.out_data)
-        //     }
-        // })
+                this.window_lost = false
+                console.log(this.out_data)
+            }
+            if (this.focus_changed) {
+                this.client_lost = false
+                this.out_data['event'] = 'CLIENT PAGE FOCUS GAINED'
+                this.out(this.out_data)
+            }
+        })
 
         parent.window.addEventListener('unload', ev => {
             if (this.client_lost) {
@@ -119,17 +119,17 @@ class CopyCutPaste {
     start_checking() {
         var evs = Array.from(['copy', 'cut', 'paste'])
         for (var i in evs) {
-            // parent.document.getElementById('client').contentWindow.addEventListener(evs[i], event => {
-            //     console.log('!!!', evs[i])
-            //     if (event['type'] === 'copy') this.out_data['event'] = 'COPY DETECTED'
-            //     if (event['type'] === 'cut') this.out_data['event'] = 'CUT DETECTED'
-            //     if (event['type'] === 'paste') this.out_data['event'] = 'PASTE DETECTED'
+            parent.document.getElementById('client').contentWindow.addEventListener(evs[i], event => {
+                console.log('!!!', evs[i])
+                if (event['type'] === 'copy') this.out_data['event'] = 'COPY DETECTED'
+                if (event['type'] === 'cut') this.out_data['event'] = 'CUT DETECTED'
+                if (event['type'] === 'paste') this.out_data['event'] = 'PASTE DETECTED'
                 
-            //     console.log(event)
+                console.log(event)
 
-            //     this.out_data['timestamp'] = new Date()
-            //     this.out(this.out_data)
-            // })
+                this.out_data['timestamp'] = new Date()
+                this.out(this.out_data)
+            })
         }
     }
 }
@@ -155,10 +155,10 @@ class TabChangeKey {
             this.detect_windows_press(event);
         })
         
-        // parent.document.getElementById('client').contentWindow.addEventListener('keydown', event => {
-        //     this.detect_alt_press(event);
-        //     this.detect_windows_press(event);
-        // })
+        parent.document.getElementById('client').contentWindow.addEventListener('keydown', event => {
+            this.detect_alt_press(event);
+            this.detect_windows_press(event);
+        })
 
         window.addEventListener('keydown', event => {
             this.detect_alt_press(event);
@@ -251,11 +251,11 @@ class KeyMouseTrap {
             if (name === 'contextmenu') this.right_trap_mouse(event)
         })
         
-        // parent.document.getElementById('client').contentWindow.addEventListener(name, event => {
-        //     if (name === 'click') this.left_trap_mouse(event)
-        //     if (name === 'keydown') this.trap_key(event)
-        //     if (name === 'contextmenu') this.right_trap_mouse(event)
-        // })
+        parent.document.getElementById('client').contentWindow.addEventListener(name, event => {
+            if (name === 'click') this.left_trap_mouse(event)
+            if (name === 'keydown') this.trap_key(event)
+            if (name === 'contextmenu') this.right_trap_mouse(event)
+        })
 
         window.addEventListener(name, event => {
             if (name === 'click') this.left_trap_mouse(event)
