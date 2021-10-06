@@ -155,7 +155,9 @@ class TabChangeKey {
             this.detect_windows_press(event);
         })
         
+        console.log('setting client keydown')
         parent.document.getElementById('client').contentWindow.addEventListener('keydown', event => {
+            console.log('key down from client')
             this.detect_alt_press(event);
             this.detect_windows_press(event);
         })

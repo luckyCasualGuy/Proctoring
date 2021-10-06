@@ -16,11 +16,11 @@ const EVENT_BASED_TASK = [
     [Mediapipe, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas, "start_flag": media_start}]
 ];
 
-parent.window.addEventListener('message', receiveMessage, false);
-console.log('###', parent.window)
-function receiveMessage(event) {
-    console.log("got event: " + event.data);
-}
+// parent.window.addEventListener('message', receiveMessage, false);
+// console.log('###', parent.window)
+// function receiveMessage(event) {
+//     console.log("got event: " + event.data);
+// }
 
 
 function out(out_data) {
@@ -51,6 +51,18 @@ function out(out_data) {
     }
 }
 
+start_element.addEventListener('click', ev => {
+    if (ready) {
+        media_start = true
+        EVENT_BASED_TASK.forEach(task => {
+            let task_ = new task[0](out, task[1])
+            console.log(task_)
+            task_.start_checking()
+        });
+    }
+})
+
+
 let interval = 0
 setInterval(
     function(){
@@ -73,16 +85,6 @@ setInterval(
     }, 
     5000
 );
-
-start_element.addEventListener('click', ev => {
-    if (ready) {
-        media_start = true
-        EVENT_BASED_TASK.forEach(task => {
-            let task_ = new task[0](out, task[1])
-            task_.start_checking()
-        });
-    }
-})
 
 
 function sendData(out_data, dothis) {
