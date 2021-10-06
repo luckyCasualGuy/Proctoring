@@ -61,12 +61,9 @@ def hello_world_post():
         data = json.loads(beacon_log)
     
     if data["event"] == "IMAGE":
-        # print(data)
         sql.log_image_db(data)
     else:
         sql.log_to_db(data)
-
-    # print("----------------------->", data)
 
     return {'comment': 'received'}
 
