@@ -8,7 +8,10 @@ function get_images(session, roll_no) {
         processData: false,
         'contentType': 'application/json',
         cache: false,
-        success: data => show_images(data),
+        success: data => {
+            document.getElementById("image_disp").innerHTML = ''
+            show_images(data)
+        },
         error: error => console.error('ERROR SENDING FORM: ', error)
     });
 }
