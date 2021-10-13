@@ -1,6 +1,6 @@
 CREATE TABLE `procter`.`logs` (
   `log_id` INT NOT NULL AUTO_INCREMENT,
-  `roll_no` INT UNSIGNED ZEROFILL NOT NULL,
+  `roll_no` VARCHAR(25) NOT NULL,
   `session_name` VARCHAR(155) NOT NULL,
   `event` VARCHAR(55) NOT NULL,
   `timestamp` VARCHAR(55) NOT NULL,
