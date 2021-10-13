@@ -9,8 +9,8 @@ from handler import MySQLConnect, CalculateResult, DataPreprocess
 app = Flask(__name__, static_url_path='/static',template_folder="static/templates")
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1Supermscp!'
-# app.config['MYSQL_PASSWORD'] = '1234'
+# app.config['MYSQL_PASSWORD'] = '1Supermscp!'
+app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'procter'
 
 app.config['DEBUG'] = True
@@ -21,6 +21,10 @@ app.config["send_from_directory"] = True
 sql = MySQLConnect(app)
 score_calculator = CalculateResult(sql)
 calc = DataPreprocess(sql)
+
+@app.route("/thankyou/", methods=['GET'])
+def thankyou():
+    return render_template("thankyoupage.html")
 
 @app.route("/client/register/", methods=['GET'])
 def client_get_register():
@@ -58,7 +62,7 @@ def hello_world_post():
         beacon_log = request.data.decode('utf8')
         data = json.loads(beacon_log)
 
-    print(data)
+    # print(data)
     
     if data["event"] == "IMAGE":
         print('loggging image')
