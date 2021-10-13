@@ -13,7 +13,7 @@ const EVENT_BASED_TASK = [
     [PageLeave, {}],
     [KeyMouseTrap, {}],
     // [CapturePics, {}],
-    [Mediapipe, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas, "start_flag": media_start}]
+    // []
 ];
 
 // parent.window.addEventListener('message', receiveMessage, false);
@@ -51,6 +51,7 @@ function out(out_data) {
     }
 }
 
+var mp = null;
 start_element.addEventListener('click', ev => {
     if (ready) {
         media_start = true
@@ -59,15 +60,20 @@ start_element.addEventListener('click', ev => {
             console.log(task_)
             task_.start_checking()
         });
+
+        mp = new Mediapipe(out, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas, "start_flag": media_start}) 
+        mp.start_checking()
     }
 })
+
+
 
 
 let interval = 0
 setInterval(
     function(){
-        console.log(media_start)
-        if (interval < 10 && media_start){
+        console.log(mp.Result.pipe_stated)
+        if (interval < 10 && mp.Result.pipe_stated){
             let pic = parent_canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
             let out_data = {
                 'event': 'IMAGE',

@@ -42,6 +42,8 @@ class HeadChange{
         this.out = out
         this.params = params
 
+        this.pipe_stated = false
+
         this.head_rotation_angle = 2.9
         this.head_buffer = 0
 
@@ -68,6 +70,8 @@ class HeadChange{
         this.out_canvas = params['out_canvas']
         this.canvas_ctx = this.out_canvas.getContext('2d')
 
+        this.wait = true
+
         parent.window.addEventListener('unload', ev => {
             if (this.current_head_status !== "NEUTRAL" && this.current_head_status !== 'undefined') {
                 let out_data = {
@@ -81,7 +85,6 @@ class HeadChange{
                 this.out(out_data)
         }
 
-
             this.out_data['event'] = ''
             this.out_data['beacon'] = true
             this.out(this.out_data)
@@ -93,6 +96,7 @@ class HeadChange{
         return result => {
             this.draw_FM_on_parent(result)
             this.handle_head_status(result)
+            this.pipe_stated = true
         }
     }
 

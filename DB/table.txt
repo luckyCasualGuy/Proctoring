@@ -17,7 +17,7 @@ CREATE TABLE `procter`.`logs` (
   `data` BINARY(64) NOT NULL,
   PRIMARY KEY (`encrypt_id`));
 
-  CREATE TABLE `procter`.`token` (
+CREATE TABLE `procter`.`token` (
   `token_id` INT NOT NULL AUTO_INCREMENT,
   `token` VARCHAR(55) NOT NULL,
   `roll_no` VARCHAR(55) NOT NULL,
