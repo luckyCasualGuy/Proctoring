@@ -63,28 +63,6 @@ start_element.addEventListener('click', ev => {
 })
 
 
-let interval = 0
-setInterval(
-    function(){
-        console.log(media_start)
-        if (interval < 10 && media_start){
-            let pic = parent_canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-            let out_data = {
-                'event': 'IMAGE',
-                'image': pic,
-                'timestamp': new Date(),
-                'display_msg': false,
-                'message': "",
-                'beacon': false
-            }
-            // console.log(out_data["image"])
-            console.log("sent image");
-            interval += 1
-            out(out_data)
-        }
-    }, 
-    5000
-);
 
 
 function sendData(out_data, dothis) {

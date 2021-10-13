@@ -31,6 +31,7 @@ function show_images(data){
         img_el.style.width = "100%"
         img_el.style.height = "100%"
         // img_el.style.padding = "20px"
-        img_holder.appendChild(img_el);
+        // img_holder.appendChild(img_el);
+        img_holder.innerHTML = img_el
     }
 }
