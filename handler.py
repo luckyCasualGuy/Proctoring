@@ -40,7 +40,7 @@ class MySQLConnect:
 
     def log_token(self, session_name, roll_no, token):
         cursor = self.mysql.connection.cursor()
-        cursor.execute(f"INSERT INTO token (roll_no, session_name, token) VALUES ({roll_no}, '{session_name}', '{token}');")
+        cursor.execute(f"INSERT INTO token (roll_no, session_name, token) VALUES ('{roll_no}', '{session_name}', '{token}');")
         self.mysql.connection.commit()
     
     def log_new_client(self, data):
@@ -81,7 +81,6 @@ class MySQLConnect:
         return all_encoded_imgs
 
     def log_image_db(self, data):
-
         student_face_path = Path(f'''./static/face_imgs/{data['session']}''')
         student_face_path.mkdir(exist_ok=True)
         student_face_path = student_face_path / data['roll_no']
@@ -110,7 +109,7 @@ class MySQLConnect:
         # print(f.parent)
 
         cursor = self.mysql.connection.cursor()
-        cursor.execute(f"INSERT INTO images (roll_no, session_name, image, timestamp) VALUES ({data['roll_no']}, '{data['session']}', %s, '{data['timestamp']}');",(face_path,))
+        cursor.execute(f"INSERT INTO images (roll_no, session_name, image, timestamp) VALUES ('{data['roll_no']}', '{data['session']}', %s, '{data['timestamp']}');",(face_path,))
         self.mysql.connection.commit()
 
     def check_if_path_exists():
@@ -118,7 +117,7 @@ class MySQLConnect:
 
     def log_to_db(self, data):
         cursor = self.mysql.connection.cursor()
-        cursor.execute(f"INSERT INTO logs (roll_no, session_name, event, timestamp) VALUES ({data['roll_no']}, '{data['session']}', '{data['event']}', '{data['timestamp']}');")
+        cursor.execute(f"INSERT INTO logs (roll_no, session_name, event, timestamp) VALUES ('{data['roll_no']}', '{data['session']}', '{data['event']}', '{data['timestamp']}');")
         self.mysql.connection.commit()
 
 
