@@ -22,20 +22,9 @@ const EVENT_BASED_TASK = [
 
 
 function out(out_data) {
-    let x;
-    clearInterval(x)
 
     if (out_data["display_msg"]){
-        ALERT.innerHTML = out_data['message']
-        
-        if (alert_wrapper.style.display != "flex"){
-            alert_wrapper.style.display = "flex"
-        }
 
-        // clear interval
-        x = setTimeout(2000, () => {
-            alert_wrapper.style.display = "none"
-        })
     }
 
     out_data['roll_no'] = roll_no_in.value

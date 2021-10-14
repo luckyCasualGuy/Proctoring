@@ -8,8 +8,7 @@ class Proctor{
     }
 
     pipe() {
-        // add dragable canvas to parent document
-        // this._add_input_video_to_parent()
+        this._add_input_video_to_parent()
         this._add_canvas_to_parent()
         this._register_events()
         // this._register_mediapipe_events()
@@ -52,6 +51,14 @@ class Proctor{
         this._dragElement(parent_canvas);
         this.parent_canvas = parent_canvas
         this.config['root']['parent'].document.getElementsByTagName('body')[0].prepend(parent_canvas)
+    }
+
+    _add_input_video_to_parent() {
+        var video_element = this.config['root']['parent'].document.createElement('video')
+        video_element.id = 'input_video';
+        video_element.style.display = "none";
+        this.video_element = video_element;
+        this.config['root']['parent'].document.getElementsByTagName('body')[0].prepend(video_element)
     }
 
     // setter
