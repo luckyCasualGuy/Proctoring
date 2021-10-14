@@ -270,9 +270,21 @@
 <script type="text/javascript" src="/static/Proctoring/proctor.js"></script>
 <script>
     console.log('@',typeof(window), window)
+
+    function on_alert(msg) {
+        let x;
+        clearInterval(x);
+        document.getElementById("ALERT").innerHTML = msg
+        if (document.getElementById("alert_wrapper").style.display != "flex"){
+            document.getElementById("alert_wrapper").style.display = "flex"}
+        x = setTimeout(2000, () => {
+            document.getElementById("alert_wrapper").style.display = "none"
+        })
+    }
+
     var P = new Proctor({
         'root': {'parent': window},
-        'controls': {'start': start, 'stop': start, 'on_alert': msg => {}},
+        'controls': {'start': start, 'stop': start, 'on_alert': on_alert},
         'credentials': {'indentification': new String('a104'), 'session': new String('sample session')}
     })
 </script>
