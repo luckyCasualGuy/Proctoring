@@ -20,8 +20,8 @@ class TabChange {
 
     start_checking() {
 
-        document.addEventListener("visibilitychange", event => {
-            this.state = document.visibilityState
+        this.params['parent'].document.addEventListener("visibilitychange", event => {
+            this.state = this.params['parent'].document.visibilityState
             this.changed = true
 
             let timeStamp = new Date()
@@ -65,7 +65,7 @@ class FocusChange {
 
     start_checking() {
         // client
-        parent.document.getElementById('client').contentWindow.addEventListener('blur', ev => {
+        this.params['client'].addEventListener('blur', ev => {
             this.client_lost = true
 
             this.focus_changed = true
@@ -74,7 +74,7 @@ class FocusChange {
             this.out(this.out_data)
         })
 
-        parent.document.getElementById('client').contentWindow.addEventListener('focus', ev => {
+        this.params['client'].addEventListener('focus', ev => {
             if (this.window_lost) { 
                 this.out_data['timestamp'] = new Date()
                 this.out_data['event'] = '*WINDOW PAGE FOCUS GAINED'
@@ -89,7 +89,7 @@ class FocusChange {
             }
         })
 
-        parent.window.addEventListener('unload', ev => {
+        this.params['parent'].addEventListener('unload', ev => {
             if (this.client_lost) {
                 this.out_data['event'] = 'CLIENT PAGE FOCUS GAINED'
                 this.out_data['beacon'] = true
@@ -97,7 +97,6 @@ class FocusChange {
                 this.out_data['beacon'] = false
             }
         })
-
     }
 }
 
@@ -119,7 +118,7 @@ class CopyCutPaste {
     start_checking() {
         var evs = Array.from(['copy', 'cut', 'paste'])
         for (var i in evs) {
-            parent.document.getElementById('client').contentWindow.addEventListener(evs[i], event => {
+            this.params['client'].addEventListener(evs[i], event => {
                 console.log('!!!', evs[i])
                 if (event['type'] === 'copy') this.out_data['event'] = 'COPY DETECTED'
                 if (event['type'] === 'cut') this.out_data['event'] = 'CUT DETECTED'
@@ -150,19 +149,14 @@ class TabChangeKey {
     }
 
     start_checking() {
-        parent.window.addEventListener('keydown', event => {
+        this.params['parent'].addEventListener('keydown', event => {
             this.detect_alt_press(event);
             this.detect_windows_press(event);
         })
         
         console.log('setting client keydown')
-        parent.document.getElementById('client').contentWindow.addEventListener('keydown', event => {
+        this.params['client'].addEventListener('keydown', event => {
             console.log('key down from client')
-            this.detect_alt_press(event);
-            this.detect_windows_press(event);
-        })
-
-        window.addEventListener('keydown', event => {
             this.detect_alt_press(event);
             this.detect_windows_press(event);
         })
@@ -212,7 +206,7 @@ class PageLeave{
     }
 
     start_checking() {
-        parent.window.addEventListener('unload', ev => {
+        this.params['parent'].addEventListener('unload', ev => {
             this.out_data['timestamp'] = new Date()
             this.out(this.out_data)
         })
@@ -247,19 +241,13 @@ class KeyMouseTrap {
     }
 
     handle_events(name) {
-        parent.window.addEventListener(name, event => {
+        this.params['parent'].addEventListener(name, event => {
             if (name === 'click') this.left_trap_mouse(event)
             if (name === 'keydown') this.trap_key(event)
             if (name === 'contextmenu') this.right_trap_mouse(event)
         })
         
-        parent.document.getElementById('client').contentWindow.addEventListener(name, event => {
-            if (name === 'click') this.left_trap_mouse(event)
-            if (name === 'keydown') this.trap_key(event)
-            if (name === 'contextmenu') this.right_trap_mouse(event)
-        })
-
-        window.addEventListener(name, event => {
+        this.params['client'].addEventListener(name, event => {
             if (name === 'click') this.left_trap_mouse(event)
             if (name === 'keydown') this.trap_key(event)
             if (name === 'contextmenu') this.right_trap_mouse(event)
@@ -267,7 +255,7 @@ class KeyMouseTrap {
     }
 
     handle_unload() {
-        parent.window.addEventListener('unload', ev => {
+        this.params['parent'].addEventListener('unload', ev => {
             this.out_data['event'] = "ALL KEY TRAPS |K"+ this.key_traps 
             this.out_data['timestamp'] = new Date()
             this.out(this.out_data)

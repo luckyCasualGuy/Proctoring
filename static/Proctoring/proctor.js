@@ -1,5 +1,3 @@
-
-
 class Proctor{
     config = {}
     out = null
@@ -42,7 +40,7 @@ class Proctor{
     _register_out() {this.on_out = this.config['controls']['on_alert']}
 
     _register_events() {
-        var params = {'parent': this.config['views']['parent'].document, 'client': this.config['views']['frame'].document}
+        var params = {'parent': this.config['views']['parent'], 'client': this.config['views']['frame']}
         this.EVENT_BASED_TASK = [
             [TabChange, params],
             [FocusChange, params],

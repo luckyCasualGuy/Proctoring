@@ -76,8 +76,6 @@
 </head>
 <body>
 
-    <!-- <canvas id="parent_canvas" height="480" width="640"></canvas> -->
-
     <div id="alert_wrapper">
         <div id="ALERT">Here is the error message</div>
     </div>
@@ -140,7 +138,7 @@
 
     start.addEventListener('mouseenter', ev => {start.src = "/static/start.gif"})
     start.addEventListener('mouseleave', ev => {start.src = "/static/start_static.png"})
- 
+
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
@@ -163,8 +161,6 @@
         })
     }
 
-
-    console.log(typeof(document.getElementById('client').contentWindow), document.getElementById('client').contentWindow)
     var P = new Proctor({
         'views': {'parent': window, 'frame': document.getElementById('client').contentWindow},
         'controls': {'start': start, 'stop': start, 'on_alert': on_alert},
