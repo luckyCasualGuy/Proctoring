@@ -76,7 +76,7 @@
 </head>
 <body>
 
-    <!-- <canvas id="parent_canvas" height="480" width="640"></canvas> -->
+    <canvas id="parent_canvas" height="480" width="640"></canvas>
 
     <div id="alert_wrapper">
         <div id="ALERT">Here is the error message</div>
@@ -108,16 +108,24 @@
     </div>
     
     <div id="main" style="display: none; margin: 10px;">
+        <iframe src="/static/templates/frame1.html" height="40" width="100%" title="Iframe Example" style="display: none;"></iframe>
         <iframe id='client' src="/static/templates/client_page_1.html" height="800" width="100%" title="Iframe Example"></iframe>
+        <!-- <iframe id='client' src="http://localhost:5003/sample_test/#" height="800" width="100%" title="Iframe Example"></iframe> -->
     </div>
 </body>
 
 <script>
+    const client = document.getElementById('client');
     const outer = document.getElementsByClassName('outer')[0]
     const main = document.getElementById('main')
     const start = document.getElementById('start')
+    document.getElementsByName
+    const roll_here = document.getElementById('roll_here')
     const roll_no_in = document.getElementById('roll_no');
     var roll_no = ''
+    var c_event = ''
+
+    console.log(parent.document.URL + 'encrypt\/')
 
     start.addEventListener('click', ev => {
         if (roll_no === '') {
@@ -125,12 +133,39 @@
         }
         else {
             roll_no = roll_no_in.value
+
+            myStorage = window.localStorage;
+            var token = localStorage.getItem('token')
+            console.log('got this', token, typeof(token))
             ready = true
             outer.style.display = 'none';
             main.style.display = 'block';
+            // if (token === 'null' || token === null) {
+            //     console.log('here')
+            //     sendDataURL(parent.document.URL + 'encrypt\/', {'session_name': 'sample session 2021 A2015', 'roll_no': roll_no}, res => {
+            //         if (res.hasOwnProperty('token')) {
+            //             console.log('token received:::::', res['token'])
+            //             localStorage.setItem('token', res['token'])
+            //             outer.style.display = 'none';
+            //             main.style.display = 'block';
+            //             ready = true
+            //         }
+
+            //         if(res['status']==='INVALID') {
+            //             document.body.innerHTML = "You Are Not Allowed To Give Exam";
+            //         }
+                    
+
+            //         console.log('status:::::', res['status'])
+            //     })
+            // }
+            // else {
+            //     document.body.innerHTML = "You Are Not Allowed To Give Exam";
+            // }
         }
 
         roll_no_in.style.border = '2px solid red'
+
     })
 
     roll_no_in.addEventListener('change', ev => {
@@ -140,18 +175,103 @@
 
     start.addEventListener('mouseenter', ev => {start.src = "/static/start.gif"})
     start.addEventListener('mouseleave', ev => {start.src = "/static/start_static.png"})
- 
+
+    const parent_canvas = document.getElementById('parent_canvas')
+    dragElement(parent_canvas)
+    function dragElement(elmnt) {
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    if (document.getElementById(elmnt.id + "header")) {
+        // if present, the header is where you move the DIV from:
+        document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+    } else {
+        // otherwise, move the DIV from anywhere inside the DIV:
+        elmnt.onmousedown = dragMouseDown;
+    }
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // set the element's new position:
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+        // stop moving when mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+    }
+
+    function sendDataURL(url_, out_data, dothis) {
+        $.ajax({
+            type: "POST",
+            enctype: 'JSON',
+            url: url_,
+            data: JSON.stringify(out_data),
+            processData: false,
+            contentType: 'application/json',
+            cache: false,
+            success: data => dothis(data) ,
+            error: error => console.error('ERROR SENDING FORM: ', error)
+        });
+    }
+
+    
+
+    // function addEventListenerAll(target, listener) {
+
+    //     // install listeners for all natively triggered events
+    //     for (const key in target) {
+    //         if (/^on/.test(key)) {
+    //             const eventType = key.substr(2);
+    //             console.log(eventType)
+    //             target.addEventListener(eventType, listener);
+    //         }
+    //     }
+
+    //     // dynamically install listeners for all manually triggered events, just-in-time before they're dispatched ;D
+    //     const dispatchEvent_original = EventTarget.prototype.dispatchEvent;
+    //     function dispatchEvent(event) {
+    //         target.addEventListener(event.type, listener);  // multiple identical listeners are automatically discarded
+    //         dispatchEvent_original.apply(this, arguments);
+    //     }
+    //     EventTarget.prototype.dispatchEvent = dispatchEvent;
+    //     if (EventTarget.prototype.dispatchEvent !== dispatchEvent) throw new Error(`Browser is smarter than you think!`);
+
+    // }
+
+    // addEventListenerAll(window, (evt) => {
+    //     // console.log(evt.type);
+    // });
+
+    // function send(event) {
+    //     window.parent.postMessage(event, '*');
+    // }
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.3.1620080281/face_detection.js" crossorigin="anonymous"></script> -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
 <script src="/static/Proctoring/head_change.js"></script>
 <script src="/static/Proctoring/generic_events.js"></script>
 <script type="text/javascript" src="/static/Proctoring/proctor.js"></script>
 <script>
+    console.log('@',typeof(window), window)
+
     function on_alert(msg) {
         let x;
         clearInterval(x);
@@ -163,8 +283,6 @@
         })
     }
 
-
-    console.log(typeof(document.getElementById('client').contentWindow), document.getElementById('client').contentWindow)
     var P = new Proctor({
         'views': {'parent': window, 'frame': document.getElementById('client').contentWindow},
         'controls': {'start': start, 'stop': start, 'on_alert': on_alert},

@@ -48,7 +48,7 @@ start_element.addEventListener('click', ev => {
             task_.start_checking()
         });
 
-        mp = new Mediapipe(out, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas, "start_flag": media_start}) 
+        mp = new Mediapipe(out, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas}) 
         mp.start_checking()
     }
 })

@@ -1,9 +1,13 @@
+
+
 class Proctor{
     config = {}
     out = null
+    azyo_end_point = null
 
     constructor(config) {
         this.configuration = config
+        this.azyo_end_point = this.config['views']['parent'].document.URL
         this.pipe()
     }
 
@@ -11,31 +15,46 @@ class Proctor{
         this._add_input_video_to_parent()
         this._add_canvas_to_parent()
         this._register_events()
-        // this._register_mediapipe_events()
+        this._register_mediapipe_events()
         this._register_out()
+        this._set_start()
+    }
 
+    start() {
+        media_start = true
+        this.EVENT_BASED_TASK.forEach(task => {
+            let task_ = new task[0](this.out, task[1])
+            task_.start_checking()
+        });
+
+        this.mp.start_checking()
     }
 
     //pipe
-    // _register_mediapipe_events() {
-    //     this.mp = new Mediapipe(out, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas, "start_flag": media_start}) 
-    // }
+    _set_start() {
+        this.config['controls']['start'].addEventListener('click', ev => { this.start() })
+    }
+
+    _register_mediapipe_events() {
+        this.mp = new Mediapipe(this.out, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': this.video_element, 'out_canvas': this.parent_canvas}) 
+    }
 
     _register_out() {this.on_out = this.config['controls']['on_alert']}
 
     _register_events() {
+        var params = {'parent': this.config['views']['parent'].document, 'client': this.config['views']['frame'].document}
         this.EVENT_BASED_TASK = [
-            [TabChange, {}],
-            [FocusChange, {}],
-            [TabChangeKey, {}],
-            [CopyCutPaste, {}],
-            [PageLeave, {}],
-            [KeyMouseTrap, {}],
+            [TabChange, params],
+            [FocusChange, params],
+            [TabChangeKey, params],
+            [CopyCutPaste, params],
+            [PageLeave, params],
+            [KeyMouseTrap, params],
         ];
     }
 
     _add_canvas_to_parent() {
-        var parent_canvas = this.config['root']['parent'].document.createElement('canvas')
+        var parent_canvas = this.config['views']['parent'].document.createElement('canvas')
         parent_canvas.id = 'parent_canvas';
         parent_canvas.width = 640;
         parent_canvas.height = 480;
@@ -50,30 +69,28 @@ class Proctor{
         parent_canvas.style.display = 'move';
         this._dragElement(parent_canvas);
         this.parent_canvas = parent_canvas
-        this.config['root']['parent'].document.getElementsByTagName('body')[0].prepend(parent_canvas)
+        this.config['views']['parent'].document.getElementsByTagName('body')[0].prepend(parent_canvas)
     }
 
     _add_input_video_to_parent() {
-        var video_element = this.config['root']['parent'].document.createElement('video')
+        var video_element = this.config['views']['parent'].document.createElement('video')
         video_element.id = 'input_video';
         video_element.style.display = "none";
         this.video_element = video_element;
-        this.config['root']['parent'].document.getElementsByTagName('body')[0].prepend(video_element)
+        this.config['views']['parent'].document.getElementsByTagName('body')[0].prepend(video_element)
     }
 
     // setter
     set on_out(on_out) {
         function get_out(on_out) {
             return (out_data) => {
-                let x;
-                clearInterval(x)
             
                 if (out_data["display_msg"]){ on_out(out_data["display_msg"]) }
             
                 out_data['roll_no'] = this.config['credentials']['indentification']
                 out_data['session'] = this.config['credentials']['session']
             
-                if (out_data['beacon']) {navigator.sendBeacon(this.config['root']['parent'].document.URL, JSON.stringify(out_data));}
+                if (out_data['beacon']) {navigator.sendBeacon(this.azyo_end_point, JSON.stringify(out_data));}
                 else {this._sendData(out_data, data => console.log('sent sucsessfully', data))}
             }
         }
@@ -83,12 +100,12 @@ class Proctor{
 
     set configuration(config) {
         var required = {
-            'root': {'parent': Window},
+            'views': {'parent': Window, 'frame': Window},
             'controls': {'start': Element, 'stop': Element, 'on_alert': Function},
             'credentials': {'indentification': String, 'session': String}
         };
-        var error = this._config_check(required, config);
-        if(!(error === undefined)) { throw error; }
+        // var error = this._config_check(required, config);
+        // if(!(error === undefined)) { throw error; }
 
         this.config = config;
     }
@@ -98,7 +115,7 @@ class Proctor{
         $.ajax({
             type: "POST",
             enctype: 'JSON',
-            url: this.config['root']['parent'].document.URL, //change this
+            url: this.azyo_end_point,
             data: JSON.stringify(out_data),
             processData: false,
             'contentType': 'application/json',
