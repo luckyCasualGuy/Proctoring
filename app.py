@@ -99,28 +99,28 @@ def test():
 
     return render_template("test.html", value=data)
 
-from encrypt.t import Tokenizer
-@app.route("/encrypt/", methods=['POST'])
-def encrypt():
-    data = request.json
-    result = {"status": "NA"}
+# from encrypt.t import Tokenizer
+# @app.route("/encrypt/", methods=['POST'])
+# def encrypt():
+#     data = request.json
+#     result = {"status": "NA"}
 
-    print('--------------------->', data)
-    for key in ['session_name', 'roll_no']:
-        if key not in data:
-            result['status'] = 'ERROR <REQUIREMENTS DID NOT MATCH>'
-            break
+#     print('--------------------->', data)
+#     for key in ['session_name', 'roll_no']:
+#         if key not in data:
+#             result['status'] = 'ERROR <REQUIREMENTS DID NOT MATCH>'
+#             break
 
-    t = Tokenizer(sql)
-    token = t.set_roll_no(data['session_name'], data['roll_no'])
-    print('--------------------->', token)
-    if not token:
-        result['status'] = "INVALID"
-    else:
-        result['status'] = "REGISTERED"
-        result['token'] = token
+#     t = Tokenizer(sql)
+#     token = t.set_roll_no(data['session_name'], data['roll_no'])
+#     print('--------------------->', token)
+#     if not token:
+#         result['status'] = "INVALID"
+#     else:
+#         result['status'] = "REGISTERED"
+#         result['token'] = token
 
-    return result
+#     return result
 
 @app.route("/sample/", methods=['GET'])
 def sample():
