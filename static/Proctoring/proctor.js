@@ -29,26 +29,13 @@ class Proctor{
     }
 
     //pipe
-    _set_start() {
-        this.config['controls']['start'].addEventListener('click', ev => { this.start() })
-    }
 
-    _register_mediapipe_events() {
-        this.mp = new Mediapipe(this.out, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': this.video_element, 'out_canvas': this.parent_canvas}) 
-    }
-
-    _register_out() {this.on_out = this.config['controls']['on_alert']}
-
-    _register_events() {
-        var params = {'parent': this.config['views']['parent'], 'client': this.config['views']['frame']}
-        this.EVENT_BASED_TASK = [
-            [TabChange, params],
-            [FocusChange, params],
-            [TabChangeKey, params],
-            [CopyCutPaste, params],
-            [PageLeave, params],
-            [KeyMouseTrap, params],
-        ];
+    _add_input_video_to_parent() {
+        var video_element = this.config['views']['parent'].document.createElement('video')
+        video_element.id = 'input_video';
+        video_element.style.display = "none";
+        this.video_element = video_element;
+        this.config['views']['parent'].document.getElementsByTagName('body')[0].prepend(video_element)
     }
 
     _add_canvas_to_parent() {
@@ -70,12 +57,26 @@ class Proctor{
         this.config['views']['parent'].document.getElementsByTagName('body')[0].prepend(parent_canvas)
     }
 
-    _add_input_video_to_parent() {
-        var video_element = this.config['views']['parent'].document.createElement('video')
-        video_element.id = 'input_video';
-        video_element.style.display = "none";
-        this.video_element = video_element;
-        this.config['views']['parent'].document.getElementsByTagName('body')[0].prepend(video_element)
+    _register_mediapipe_events() {
+        this.mp = new Mediapipe(this.out, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': this.video_element, 'out_canvas': this.parent_canvas}) 
+    }
+
+    _register_events() {
+        var params = {'parent': this.config['views']['parent'].document, 'client': this.config['views']['frame'].document}
+        this.EVENT_BASED_TASK = [
+            [TabChange, params],
+            [FocusChange, params],
+            [TabChangeKey, params],
+            [CopyCutPaste, params],
+            [PageLeave, params],
+            [KeyMouseTrap, params],
+        ];
+    }
+
+    _register_out() {this.on_out = this.config['controls']['on_alert']}
+
+    _set_start() {
+        this.config['controls']['start'].addEventListener('click', ev => { this.start() })
     }
 
     // setter

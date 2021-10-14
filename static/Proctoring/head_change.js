@@ -42,8 +42,6 @@ class HeadChange{
         this.out = out
         this.params = params
 
-        this.pipe_stated = false
-
         this.head_rotation_angle = 2.9
         this.head_buffer = 0
 
@@ -94,8 +92,12 @@ class HeadChange{
         // this.interval = 0
         // setInterval(
         //     function(){
+<<<<<<< HEAD
         //         // console.log(media_start)
         //         if (this.interval < 10 && this.pipe_stated){
+=======
+        //         if (interval < 10 && this.pipe_stated){
+>>>>>>> deff6d8f0ea9862128d40ddd9cc4dff193df3f99
         //             let pic = this.out_canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
         //             let out_data = {
         //                 'event': 'IMAGE',
@@ -113,7 +115,10 @@ class HeadChange{
         //     }, 
         //     5000
         // );
+<<<<<<< HEAD
 
+=======
+>>>>>>> deff6d8f0ea9862128d40ddd9cc4dff193df3f99
     }
     
     get_on_result() {
