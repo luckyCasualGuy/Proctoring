@@ -12,8 +12,6 @@ const EVENT_BASED_TASK = [
     [CopyCutPaste, {}],
     [PageLeave, {}],
     [KeyMouseTrap, {}],
-    // [CapturePics, {}],
-    // []
 ];
 
 // parent.window.addEventListener('message', receiveMessage, false);

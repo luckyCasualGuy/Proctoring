@@ -115,16 +115,11 @@
 </body>
 
 <script>
-    var patams = {
-        'parent': 'DOM',
-        'controls': {'start': 'DOM', 'stop': 'DOM'},
-        
-    }
-
     const client = document.getElementById('client');
     const outer = document.getElementsByClassName('outer')[0]
     const main = document.getElementById('main')
     const start = document.getElementById('start')
+    document.getElementsByName
     const roll_here = document.getElementById('roll_here')
     const roll_no_in = document.getElementById('roll_no');
     var roll_no = ''
@@ -271,4 +266,15 @@
     // }
 
 </script>
+
+<script type="text/javascript" src="/static/Proctoring/proctor.js"></script>
+<script>
+    console.log('@',typeof(window), window)
+    var P = new Proctor({
+        'root': {'parent': window},
+        'controls': {'start': start, 'stop': start, 'on_alert': msg => {}},
+        'credentials': {'indentification': new String('a104'), 'session': new String('sample session')}
+    })
+</script>
+
 </html>
