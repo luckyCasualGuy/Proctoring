@@ -70,7 +70,7 @@ start_element.addEventListener('click', ev => {
 let interval = 0
 setInterval(
     function(){
-        console.log(mp.Result.pipe_stated)
+        // console.log(mp.Result.pipe_stated)
         if (interval < 10 && mp.Result.pipe_stated){
             let pic = parent_canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
             let out_data = {
