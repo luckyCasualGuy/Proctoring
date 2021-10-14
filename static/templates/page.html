@@ -10,68 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        .outer {
-        display: table;
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        }
-
-        .middle {
-        display: table-cell;
-        vertical-align: middle;
-        }
-
-        .inner {
-        margin-left: auto;
-        margin-right: auto;
-        width: 400px;
-        /* Whatever width you want */
-        }
-
-        #start{
-            border-radius: 50%;
-            background-color: #1c1c1c;
-            width: 250px;
-            height: 250px;
-            cursor: pointer;
-        }
-                
-        #parent_canvas{
-            position: fixed;
-            right: 15px;
-            top: 15px;
-            height: 200px;
-            width: 250px;
-            border: 10px solid #1c1c1c;
-            border-radius: 5px;
-            z-index: 9;
-            cursor: move;
-            display: none;
-        }
-
-        #alert_wrapper{
-            display: none; 
-            justify-content: center;
-        }
-
-        #ALERT{
-            text-align: center;
-            position: absolute;
-            z-index: 200;
-            margin-top: 10px;
-            font-size: 26px;
-            font-weight: bold;
-            color: ghostwhite;
-            /* background-color: rgba(92, 88, 88, 0.61); */
-            background-color: #df6672;
-            border-radius: 2px; 
-            padding: 5px 15px;
-        }
-    </style>
+    <link rel="stylesheet" href="static/css/page.css">
 
 </head>
 <body>
@@ -146,10 +85,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection@0.3.1620080281/face_detection.js" crossorigin="anonymous"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
-<script src="/static/Proctoring/head_change.js"></script>
-<script src="/static/Proctoring/generic_events.js"></script>
+
+<script type="text/javascript" src="/static/Proctoring/head_change.js"></script>
+<script type="text/javascript" src="/static/Proctoring/generic_events.js"></script>
+
 <script type="text/javascript" src="/static/Proctoring/proctor.js"></script>
 <script>
     function on_alert(msg) {

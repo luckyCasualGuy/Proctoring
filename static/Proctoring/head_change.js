@@ -42,8 +42,6 @@ class HeadChange{
         this.out = out
         this.params = params
 
-        this.pipe_stated = false
-
         this.head_rotation_angle = 2.9
         this.head_buffer = 0
 
@@ -91,29 +89,27 @@ class HeadChange{
             this.out_data['beacon'] = false
         })
 
-        this.interval = 0
-        setInterval(
-            function(){
-                // console.log(media_start)
-                if (interval < 10 && this.pipe_stated){
-                    let pic = this.out_canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-                    let out_data = {
-                        'event': 'IMAGE',
-                        'image': pic,
-                        'timestamp': new Date(),
-                        'display_msg': false,
-                        'message': "",
-                        'beacon': false
-                    }
-                    // console.log(out_data["image"])
-                    console.log("sent image");
-                    this.interval += 1
-                    this.out(out_data)
-                }
-            }, 
-            5000
-        );
-
+        // this.interval = 0
+        // setInterval(
+        //     function(){
+        //         if (interval < 10 && this.pipe_stated){
+        //             let pic = this.out_canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+        //             let out_data = {
+        //                 'event': 'IMAGE',
+        //                 'image': pic,
+        //                 'timestamp': new Date(),
+        //                 'display_msg': false,
+        //                 'message': "",
+        //                 'beacon': false
+        //             }
+        //             // console.log(out_data["image"])
+        //             console.log("sent image");
+        //             this.interval += 1
+        //             this.out(out_data)
+        //         }
+        //     }, 
+        //     5000
+        // );
     }
     
     get_on_result() {
