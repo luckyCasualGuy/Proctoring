@@ -1,5 +1,6 @@
 class Proctor{
     config = {}
+    out = null
 
     constructor(config) {
         this.configuration = config
@@ -10,10 +11,30 @@ class Proctor{
         // add dragable canvas to parent document
         // this._add_input_video_to_parent()
         this._add_canvas_to_parent()
+        this._register_events()
+        // this._register_mediapipe_events()
+        this._register_out()
 
     }
 
     //pipe
+    // _register_mediapipe_events() {
+    //     this.mp = new Mediapipe(out, {'camera': Camera ,'face_mesh': FaceMesh, 'on_result': HeadChange, 'video_element': video_element, 'out_canvas': parent_canvas, "start_flag": media_start}) 
+    // }
+
+    _register_out() {this.on_out = this.config['controls']['on_alert']}
+
+    _register_events() {
+        this.EVENT_BASED_TASK = [
+            [TabChange, {}],
+            [FocusChange, {}],
+            [TabChangeKey, {}],
+            [CopyCutPaste, {}],
+            [PageLeave, {}],
+            [KeyMouseTrap, {}],
+        ];
+    }
+
     _add_canvas_to_parent() {
         var parent_canvas = this.config['root']['parent'].document.createElement('canvas')
         parent_canvas.id = 'parent_canvas';
@@ -34,6 +55,25 @@ class Proctor{
     }
 
     // setter
+    set on_out(on_out) {
+        function get_out(on_out) {
+            return (out_data) => {
+                let x;
+                clearInterval(x)
+            
+                if (out_data["display_msg"]){ on_out(out_data["display_msg"]) }
+            
+                out_data['roll_no'] = this.config['credentials']['indentification']
+                out_data['session'] = this.config['credentials']['session']
+            
+                if (out_data['beacon']) {navigator.sendBeacon(this.config['root']['parent'].document.URL, JSON.stringify(out_data));}
+                else {this._sendData(out_data, data => console.log('sent sucsessfully', data))}
+            }
+        }
+
+        this.out = get_out(on_out)
+    }
+
     set configuration(config) {
         var required = {
             'root': {'parent': Window},
@@ -44,6 +84,21 @@ class Proctor{
         if(!(error === undefined)) { throw error; }
 
         this.config = config;
+    }
+
+    // utility send data
+    _sendData(out_data, dothis) {
+        $.ajax({
+            type: "POST",
+            enctype: 'JSON',
+            url: this.config['root']['parent'].document.URL, //change this
+            data: JSON.stringify(out_data),
+            processData: false,
+            'contentType': 'application/json',
+            cache: false,
+            success: data => dothis(data) ,
+            error: error => console.error('ERROR SENDING FORM: ', error)
+        });
     }
 
     //utility checkers
