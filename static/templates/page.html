@@ -49,6 +49,12 @@
     </div>
 </body>
 
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="/static/Proctoring/proctor.js"></script>
 <script>
     const outer = document.getElementsByClassName('outer')[0]
     const main = document.getElementById('main')
@@ -65,6 +71,11 @@
             ready = true
             outer.style.display = 'none';
             main.style.display = 'block';
+            var P = new Proctor({
+                'views': {'parent': window, 'frame': document.getElementById('client').contentWindow},
+                'controls': {'start': start, 'stop': start, 'on_alert': on_alert},
+                'credentials': {'indentification': new String(roll_no), 'session': new String('sample session')}
+            })
         }
 
         roll_no_in.style.border = '2px solid red'
@@ -80,15 +91,6 @@
 
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
-
-<script type="text/javascript" src="/static/Proctoring/head_change.js"></script>
-<script type="text/javascript" src="/static/Proctoring/generic_events.js"></script>
-
-<script type="text/javascript" src="/static/Proctoring/proctor.js"></script>
 <script>
     function on_alert(msg) {
         let x;
@@ -100,12 +102,6 @@
             document.getElementById("alert_wrapper").style.display = "none"
         })
     }
-
-    var P = new Proctor({
-        'views': {'parent': window, 'frame': document.getElementById('client').contentWindow},
-        'controls': {'start': start, 'stop': start, 'on_alert': on_alert},
-        'credentials': {'indentification': new String('a104'), 'session': new String('sample session')}
-    })
 </script>
 
 </html>

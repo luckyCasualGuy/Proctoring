@@ -19,7 +19,9 @@ class TabChange {
     }
 
     start_checking() {
-
+        console.log(this.params)
+        console.log(this.params['parent'])
+        console.log(this.params['parent'].document)
         this.params['parent'].document.addEventListener("visibilitychange", event => {
             this.state = this.params['parent'].document.visibilityState
             this.changed = true
