@@ -154,8 +154,7 @@ class HeadChange{
             "display_msg": this.messages[event], 
             'message': this.messages[event],
             'beacon': false
-        }
-            
+        }       
     }
 
     check_case_for_head_status(angles){
@@ -564,11 +563,13 @@ class Proctor{
     out = null
     interval = 0
     azyo_end_point = null
+    interval = 0
+    creds = null
 
     constructor(config) {
         this.configuration = config
         this.azyo_end_point = this.config['views']['parent'].document.URL
-        this.pipe()
+        // this.pipe()
     }
 
     pipe() {
@@ -578,10 +579,12 @@ class Proctor{
         this._register_events()
         this._register_mediapipe_events()
         this._set_image_interval()
-        this._set_start()
+        // this._set_start()
     }
 
     start() {
+        this.pipe()
+
         this.EVENT_BASED_TASK.forEach(task => {
             let task_ = new task[0](this.out, task[1])
             task_.start_checking()
@@ -638,19 +641,33 @@ class Proctor{
         ];
     }
 
-    _register_out() {this.on_out = this.config['controls']['on_alert']}
+    _register_out() {
+        if(this.creds === null) {throw 'ERROR: credentials not set'}
+        this.on_out = this.config['controls']['on_alert']
+    }
 
     _set_start() {
         this.config['controls']['start'].addEventListener('click', ev => { this.start() })
     }
 
     // setter
+    set credentials(creds) {
+        var required = {'indentification': String, 'session': String}
+
+        for (const [key, value] of Object.entries(required)) {
+            if(!(key in creds)) { throw 'ERROR: ' +  key + ' configuration missing'}
+            if((typeof(creds[key]) !== 'string')) { throw 'ERROR: ' + key + ' should be string' }
+        }
+
+        this.creds = creds
+    }
+
     set on_out(on_out) {
         this.out = (out_data) => {
             if (out_data["display_msg"]){ on_out(out_data["message"]) }
             
-                out_data['roll_no'] = this.config['credentials']['indentification']
-                out_data['session'] = this.config['credentials']['session']
+                out_data['roll_no'] = this.creds['indentification']
+                out_data['session'] = this.creds['session']
             
                 if (out_data['beacon']) {navigator.sendBeacon(this.azyo_end_point, JSON.stringify(out_data));}
                 else {this._sendData(out_data, data => console.log('sent sucsessfully', data))}
@@ -660,8 +677,7 @@ class Proctor{
     set configuration(config) {
         var required = {
             'views': {'parent': Window, 'frame': Window},
-            'controls': {'start': Element, 'stop': Element, 'on_alert': Function},
-            'credentials': {'indentification': String, 'session': String}
+            'controls': {'on_alert': Function},
         };
         // var error = this._config_check(required, config);
         // if(!(error === undefined)) { throw error; }
