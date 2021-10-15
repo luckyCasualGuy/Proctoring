@@ -62,6 +62,23 @@
     const roll_no_in = document.getElementById('roll_no');
     var roll_no = ''
 
+    function on_alert(msg) {
+        let x;
+        clearInterval(x);
+        document.getElementById("ALERT").innerHTML = msg
+        if (document.getElementById("alert_wrapper").style.display != "flex"){
+            document.getElementById("alert_wrapper").style.display = "flex"}
+        x = setTimeout(2000, () => {
+            document.getElementById("alert_wrapper").style.display = "none"
+        })
+    }
+
+    var P = new Proctor({
+        'views': {'parent': window, 'frame': document.getElementById('client').contentWindow},
+        'controls': {'on_alert': on_alert},
+        'credentials': {'indentification': new String(roll_no), 'session': new String('sample session')}
+    })
+
     start.addEventListener('click', ev => {
         if (roll_no === '') {
             document.getElementById('roll_req').innerHTML = "Roll number is required"
@@ -71,15 +88,13 @@
             ready = true
             outer.style.display = 'none';
             main.style.display = 'block';
-            var P = new Proctor({
-                'views': {'parent': window, 'frame': document.getElementById('client').contentWindow},
-                'controls': {'start': start, 'stop': start, 'on_alert': on_alert},
-                'credentials': {'indentification': new String(roll_no), 'session': new String('sample session')}
-            })
+            P.credentials = {'indentification': roll_no, 'session': 'Sample Examination 2021 Day 1'}
+            P.start()
         }
 
         roll_no_in.style.border = '2px solid red'
     })
+
 
     roll_no_in.addEventListener('change', ev => {
         roll_no = roll_no_in.value
@@ -92,16 +107,6 @@
 
 </script>
 <script>
-    function on_alert(msg) {
-        let x;
-        clearInterval(x);
-        document.getElementById("ALERT").innerHTML = msg
-        if (document.getElementById("alert_wrapper").style.display != "flex"){
-            document.getElementById("alert_wrapper").style.display = "flex"}
-        x = setTimeout(2000, () => {
-            document.getElementById("alert_wrapper").style.display = "none"
-        })
-    }
 </script>
 
 </html>
