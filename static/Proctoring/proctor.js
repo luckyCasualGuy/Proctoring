@@ -562,6 +562,7 @@ class KeyMouseTrap {
 class Proctor{
     config = {}
     out = null
+    interval = 0
     azyo_end_point = null
 
     constructor(config) {
@@ -591,7 +592,6 @@ class Proctor{
 
     //pipe
     _set_image_interval() {
-        this.interval = 0
         setInterval(this._get_on_image_send_interval() , 5000);
     }
 
