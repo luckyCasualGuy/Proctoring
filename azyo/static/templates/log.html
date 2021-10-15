@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>log API</title>
+</head>
+<body>
+
+    <h1>how to use log API</h1>
+
+    <h3>step 1: Import our cdn: </h3>
+
+    <h3>step 2: Initialize proctoring class</h3>
+    <p>
+        ```<br>
+        var P = new Proctor({<br>
+            'auth': {'key': 'your key goes here'}
+            'views': {'parent': window, 'frame': document.getElementById('client').contentWindow},<br>
+            'controls': {'on_alert': on_alert},<br>
+            'credentials': {'indentification': new String(roll_no), 'session': new String('sample session')}<br>
+        })<br>
+        ```<br>
+    </p>
+
+    <h3>step 3: set credentials</h3>
+    <p>
+        ```<br>
+        P.credentials = {'indentification': roll no here, 'session': 'Sample Examination 2021 Day 1'}<br>
+        ```<br>
+    </p>
+
+
+    <h3>step 4: start proctoring by calling the start metod</h3>
+    <p>
+        ```<br>
+        P.start()<br>
+        ```<br>
+    </p>
+
+    <h3>To know about it in more detail please contact us at: xchandaar@gmail.com</h3>
+    
+</body>
+</html>

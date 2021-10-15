@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.11.2/sc-2.0.5/sp-1.4.0/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.11.2/sc-2.0.5/sp-1.4.0/datatables.min.js"></script>
+    
+    <style>
+        .roll {
+            cursor: pointer;
+        };
+        #image_disp{
+            display: grid !important;
+            grid-template-columns: repeat(8, 1fr) !important;
+            grid-template-rows: repeat(8, 5vw) !important;
+            grid-gap: 15px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="background-color: #1c1c1c; color: #b6b6b6; margin-bottom: 2rem;">
+        <!-- {{value['result 2']}} -->
+    </div>
+    <div class="container">
+        <div class="row" id="roll_list_row">
+            <div class="col">
+                <table id="roll_list" class="table table-hover">
+                    <thead>
+                        <th scope="col">ID</th>
+                        <th scope="col">Roll No</th>
+                        <th scope="col">Overall</th>
+                    </thead>
+                    <tbody>
+                        {% for val in value['result 2']['roll list'] %}
+                        <tr>
+                            <th scope="row">{{loop.index0}}</th>
+                            <td class="roll">{{val}}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{value['result 2']['senario result'][val]['total'] * 25}}%" aria-valuenow="{{value['result 2']['senario result'][val]['total'] * 25}}" aria-valuemin="0" aria-valuemax="100">                                   
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </table>
+
+        <div class="row" id="roll_list_out">
+            <div class="col-6">
+                <table id="roll_list" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Event</th>
+                            <th scope="col">Penalty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roll_out_body">
+                        <tr>
+                            <td>
+                                <h3 colspan="2">Select Roll No From The List Above</h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="macro_conditions" style="display: none;"></div>
+
+            </div>
+            <div class="col-6">
+                <div style="text-align: center;">
+                    <!-- <h3>Penalties</h3> -->
+                    <!-- <div id="d3-container" /> -->
+                    <canvas id="myChart" width="400" height="400"></canvas>
+                  </div>
+            </div>
+        </div>
+        <div class="accordion" id="accordionExample" style="padding-top: 15px;">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Student's environment during examination
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body" id = "image_disp" style="display: grid ;grid-template-columns: repeat(5, 1fr);grid-template-rows: repeat(2, 1fr); grid-gap: 15px;">
+                </div>
+              </div>
+            </div>
+        </div>  
+
+        </div>
+
+    </div>
+
+</body>
+
+<script>
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+    
+</script>
+
+
+<script>
+    const roll_out = document.getElementById("roll_list_out")
+    const rolls = document.getElementsByClassName("roll")
+    const roll_out_body = document.getElementById("roll_out_body")
+    const macro_block = document.getElementById("macro_conditions")
+
+    var data = {{ value | tojson }};
+    console.log(data['result 2'])
+    // console.log(data['result 2']["EVENT_LIST"])
+
+    var new_data = data['result 2']
+
+    var events = new_data["EVENT_LIST"]
+    var global_avg_per_event = []
+
+    for (i in events){
+        let temp = new_data["event summary"][events[i]]["over all avg"]
+        global_avg_per_event.push(temp)
+    }
+
+    Array.from(rolls).forEach(el => {
+        el.addEventListener('click', ev => {
+            // console.log(el.innerHTML)
+            get_table_body(el.innerHTML)
+        })
+    })
+
+    function get_table_body(for_no) {
+        roll_out_body.innerHTML = ""
+
+        get_images("Sample Examination 2021 Day 1",for_no)
+
+        // get_data_graph(overall_list)
+        // change_graph(f_type)
+        let curr_stu_data = []
+        for (i in events){
+            // console.log(event)
+            let temp = new_data["OOP"][events[i]]["results"][for_no]["over all"]
+            // console.log(temp)
+            curr_stu_data.push(temp)
+        }
+        change_graph(curr_stu_data)
+
+        macro_block.style.display = "block"
+
+        var OOP = new_data["OOP"]
+        for (var event_name in OOP) {
+            event_details = OOP[event_name]['results'][for_no]
+
+            event_overall = event_details['over all']
+            var tr = document.createElement('tr')
+            tr.id = event_name
+            tr.innerHTML = 
+                `<td> `+ event_name +`</td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: `+event_overall+`%" aria-valuenow="`+event_overall+`" aria-valuemin="0" aria-valuemax="100">
+                        </div>
+                    </div>
+                </td>`
+            roll_out_body.appendChild(tr)
+        }
+
+        macro_block.innerHTML = ""
+        for (var scenario in new_data['SENARIO_LIST']) {
+            var status = new_data['senario result'][for_no][scenario]['status']
+            var class_select = (status? "btn-danger" : "btn-info")
+            macro_block.innerHTML += `<a style="margin:5px;" tabindex="0" class="btn btn-l mx-1 ` + class_select + `" role="button" data-bs-toggle="popover" data-bs-trigger="focus" title="Note" data-bs-content="Check out the highlighted columns">`+scenario+`</a>`
+        }
+
+        Array.from(macro_block.childNodes).forEach(el => {
+            el.addEventListener('click', ev => {
+                var required = new_data['SENARIO_LIST'][el.innerHTML]['required']
+                for (var id_all in new_data['EVENT_LIST']) {
+                    document.getElementById(new_data['EVENT_LIST'][id_all]).style.backgroundColor = 'white'
+                }
+
+                for (var id_req in required) {
+                    document.getElementById(required[id_req]).style.backgroundColor = (el.className.split(' ')[2] === 'btn-danger')? '#dd4848' : "#b6b6b6"
+                }
+            })
+        })
+    }
+
+</script>
+
+<script>
+    const table_list = document.getElementById("roll_out_body").childNodes;
+
+    $(document).ready( function () {
+        $('#roll_list').DataTable();
+    } );
+</script>
+
+
+<script type="text/javascript" src="/static/Proctoring/image_get.js"></script>
+<script type="text/javascript" src="/static/Proctoring/grapher.js"></script>
+</html>
