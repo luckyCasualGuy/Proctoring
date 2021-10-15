@@ -561,6 +561,7 @@ class KeyMouseTrap {
 class Proctor{
     config = {}
     out = null
+    interval = 0
     azyo_end_point = null
     interval = 0
     creds = null
