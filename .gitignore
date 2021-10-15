@@ -1,5 +1,6 @@
-user logs/
-static/face_imgs/**
+development/static/face_imgs/**
+azyo/static/face_imgs/**
+client/static/face_imgs/**
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

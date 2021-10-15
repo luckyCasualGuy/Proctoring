@@ -61,6 +61,23 @@ def hello_world_post():
         beacon_log = request.data.decode('utf8')
         data = json.loads(beacon_log)
 
+    
+    if data["event"] == "IMAGE":
+        print('loggging image')
+        sql.log_image_db(data)
+    else:
+        sql.log_to_db(data)
+
+    return {'comment': 'received'}
+
+
+@app.route("/", methods=['POST'])
+def hello_world_post():
+    data = request.json
+    if not data:
+        beacon_log = request.data.decode('utf8')
+        data = json.loads(beacon_log)
+
     # print(data)
     
     if data["event"] == "IMAGE":
