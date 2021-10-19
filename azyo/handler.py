@@ -17,7 +17,13 @@ class MySQLConnect:
     def __init__(self, flask_app) -> None:
         self.app = flask_app
         self.mysql = MySQL(self.app)
-    
+
+    def check_client_licence_code_exists(self, secret):
+        cursor = self.mysql.connection.cursor()
+        cursor.execute(f"SELECT licence_code FROM client WHERE licence_code='{secret}'")
+        licence_code = cursor.fetchall()
+        return True if licence_code else False
+
     def get_roll_no_for_token(self, session_name, token):
         cursor = self.mysql.connection.cursor()
         cursor.execute(f"SELECT roll_no FROM token WHERE session_name='{session_name}' AND token='{token}' ORDER BY token_id ASC")
@@ -255,7 +261,10 @@ class CalculateResult:
             time_values = df[df['event'].isin([key, value])]['timestamp'].values
             event_start_time, event_stop_time = time_values[::2], time_values[1::2]
 
-            assert(event_start_time.shape == event_stop_time.shape)
+            try:
+                assert(event_start_time.shape == event_stop_time.shape)
+            except Exception as err:
+                event_start_time = event_start_time[:-1]
 
             time_delta: ndarray = event_stop_time - event_start_time
             time_delta = time_delta.astype('timedelta64[ms]').astype('int64')
@@ -454,7 +463,11 @@ class DataPreprocess:
                     time_values = df[df['event'].isin(pairs)]['timestamp'].values
                     event_start_time, event_stop_time = time_values[::2], time_values[1::2]
 
-                    time_delta: ndarray = event_stop_time - event_start_time
+                    try:
+                        time_delta: ndarray = event_stop_time - event_start_time
+                    except Exception as err:
+                        time_delta: ndarray = event_stop_time - event_start_time[:-1]
+                        
                     time_delta = time_delta.astype('timedelta64[ms]').astype('int64')
 
                     checker = time_delta
