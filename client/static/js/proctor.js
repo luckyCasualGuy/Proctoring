@@ -675,7 +675,7 @@ class Proctor{
                 out_data['roll_no'] = this.creds['indentification']
                 out_data['session'] = this.creds['session']
             
-                if (out_data['beacon']) {navigator.sendBeacon(this.azyo_end_point, JSON.stringify(out_data));}
+                if (out_data['beacon']) {navigator.sendBeacon(this.azyo_log_end_point, JSON.stringify(out_data));}
                 else {this._sendData(out_data, data => console.log('sent sucsessfully', data))}
         }
     }
@@ -716,7 +716,7 @@ class Proctor{
         $.ajax({
             type: "POST",
             enctype: 'JSON',
-            url: this.azyo_end_point,
+            url: this.azyo_log_end_point,
             headers: { 'Access-Control-Allow-Origin': 'http://192.168.0.106:5003/log' },
             data: JSON.stringify(out_data),
             processData: false,
