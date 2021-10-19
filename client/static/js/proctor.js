@@ -562,15 +562,21 @@ class Proctor{
     config = {}
     out = null
     interval = 0
-    azyo_end_point = 'http://192.168.0.106:5003/log'
-    // azyo_end_point = 'http://103.123.36.179:5003/log'
+    azyo_end_point = 'http://192.168.0.106:5003/'
+    azyo_log_end_point = azyo_end_point + 'log'
+    azyo_secret_end_point = azyo_end_point + 'secret_code_check'
     interval = 0
     creds = null
 
-    constructor(config) {
+    constructor(config, secret) {
         this.configuration = config
-        // this.azyo_end_point = this.config['views']['parent'].document.URL
-        // this.pipe()
+        this.secret = secret
+        this._sendSecret(res => {
+            if (res['ERROR']) {
+                alert('SECRET KEY INVALID')               
+                this.start = () => {console.warn('API KEY INVALID', res)}
+            }
+        })
     }
 
     pipe() {
@@ -722,6 +728,21 @@ class Proctor{
         });
     }
 
+    _sendSecret(dothis) {
+        $.ajax({
+            type: "POST",
+            enctype: 'JSON',
+            url: this.azyo_secret_end_point,
+            headers: { 'Access-Control-Allow-Origin': 'http://192.168.0.106:5003/log' },
+            data: JSON.stringify({'secret': this.secret}),
+            processData: false,
+            'contentType': 'application/json',
+            cache: false,
+            success: data => dothis(data) ,
+            error: error => console.error('ERROR SENDING FORM: ', error)
+        });
+    }
+    
     //utility checkers
     _config_check(required, config) {
         for (const [key, value] of Object.entries(required)) {
