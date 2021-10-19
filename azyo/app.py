@@ -2,14 +2,17 @@ from flask import Flask, json
 from flask import render_template
 from flask import request
 # import json
-
+from flask_cors import CORS
 from handler import MySQLConnect, CalculateResult, DataPreprocess
 
 
 app = Flask(__name__, static_url_path='/static',template_folder="static/templates")
+CORS(app)
+
+
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1Supermscp1'
+app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'procter'
 
 app.config['DEBUG'] = True

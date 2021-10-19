@@ -254,9 +254,12 @@ class CalculateResult:
         for key, value in self.opposite_pairs.items():
             time_values = df[df['event'].isin([key, value])]['timestamp'].values
             event_start_time, event_stop_time = time_values[::2], time_values[1::2]
-
-            assert(event_start_time.shape == event_stop_time.shape)
-
+           
+            try:
+                assert(event_start_time.shape == event_stop_time.shape)
+            except:
+                event_start_time = event_start_time[:-1]
+            
             time_delta: ndarray = event_stop_time - event_start_time
             time_delta = time_delta.astype('timedelta64[ms]').astype('int64')
 
@@ -454,7 +457,11 @@ class DataPreprocess:
                     time_values = df[df['event'].isin(pairs)]['timestamp'].values
                     event_start_time, event_stop_time = time_values[::2], time_values[1::2]
 
-                    time_delta: ndarray = event_stop_time - event_start_time
+                    try:
+                        time_delta: ndarray = event_stop_time - event_start_time
+                    except:
+                        time_delta: ndarray = event_stop_time - event_start_time[:-1]
+                    
                     time_delta = time_delta.astype('timedelta64[ms]').astype('int64')
 
                     checker = time_delta
