@@ -8,6 +8,7 @@ from PIL import Image
 import base64
 import numpy as np
 import io
+import random, string
 
 
 USER_LOGS = Path('user logs')
@@ -47,7 +48,8 @@ class MySQLConnect:
     
     def log_new_client(self, data):
         cursor = self.mysql.connection.cursor()
-        cursor.execute(f"INSERT INTO client (client_name, licence_code, no_of_users, expiry_date, start_date, password) VALUES (% s, % s, % s, % s, % s, % s);", (data['username'], data['license'], data['number_of_users'], data['expiry'], data['start'], data['password']))
+        license = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+        cursor.execute(f"INSERT INTO client (client_name, licence_code, no_of_users, expiry_date, start_date, password) VALUES (% s, % s, % s, % s, % s, % s);", (data['username'], license, data['number_of_users'], data['expiry'], data['start'], data['password']))
         self.mysql.connection.commit()
 
     def login_user(self, data):
