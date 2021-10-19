@@ -75,8 +75,7 @@
     var P = new Proctor({
         'views': {'parent': window, 'frame': document.getElementById('client').contentWindow},
         'controls': {'on_alert': on_alert},
-        'credentials': {'indentification': new String(roll_no), 'session': new String('sample session')}
-    })
+    }, secret='6IsnQ8a2S9N6jIXd')
 
     start.addEventListener('click', ev => {
         if (roll_no === '') {

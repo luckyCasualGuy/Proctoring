@@ -556,15 +556,13 @@ class KeyMouseTrap {
 }
 
 
-
-
 class Proctor{
     config = {}
     out = null
     interval = 0
     azyo_end_point = 'http://192.168.0.106:5003/'
-    azyo_log_end_point = azyo_end_point + 'log'
-    azyo_secret_end_point = azyo_end_point + 'secret_code_check'
+    azyo_log_end_point = this.azyo_end_point + 'log'
+    azyo_secret_end_point = this.azyo_end_point + 'secret_code_check'
     interval = 0
     creds = null
 
@@ -576,6 +574,7 @@ class Proctor{
                 alert('SECRET KEY INVALID')               
                 this.start = () => {console.warn('API KEY INVALID', res)}
             }
+            console.log(res)
         })
     }
 
